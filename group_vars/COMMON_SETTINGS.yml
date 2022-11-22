@@ -1,0 +1,195 @@
+---
+# Local users
+local_users:
+  someuser:
+    privilege: 15
+    role: network-admin
+    sha512_password: "someshapassword"
+
+  cvpadmin:
+    privilege: 15
+    role: network-admin
+    sha512_password: "someshapassword"
+
+# Cloud Vision server information
+cvp_instance_ip: 192.168.0.5
+# This ingest key is set at CVP install time.
+cvp_ingestauth_key: dogeface
+
+# OOB Management network default gateway.
+mgmt_gateway: 192.168.0.1
+
+# dns servers.
+name_servers:
+  - 8.8.8.8
+  - 8.8.4.4
+
+# NTP Servers IP or DNS
+# First NTP server will be preferred
+# Sourced from Managment VRF
+ntp_servers:
+  - 0.se.pool.ntp.org
+  - 1.se.pool.ntp.org
+
+# bgp peer groups passwords
+bgp_peer_groups:
+  MPLS_OVERLAY_PEERS:
+    password: $1c$U4tL2vQP9QwZlxIV1K3/pw==
+  RR_OVERLAY_PEERS:
+    password: $1c$U4tL2vQP9QwZlxIV1K3/pw==
+
+internal_vlan_order:
+  allocation: ascending
+  range:
+    beginning: 3700
+    ending: 3900
+
+# BGP max-paths and ecmp
+bgp_maximum_paths: 4
+bgp_ecmp: 4
+# evpn_ebgp_multihop: 10
+
+# Adjust default bfd values if desired.
+bfd_multihop:
+  interval: 10000
+  min_rx: 10000
+  multiplier: 3
+
+# Interface defaults for unused ports
+interface_defaults:
+  ethernet:
+    shutdown: true
+
+switchport_default:
+  mode: routed
+
+# Common password seed
+management_security:
+  password:
+    encryption_key_common: true
+
+# Endpoint keys
+connected_endpoints_keys:
+  routers:
+    type: router
+  cpes:
+    type: cpe
+  servers:
+    type: server
+  ethernet_aggregations:
+    type: ethernet_aggregation
+  clients:
+    type: client
+
+# Core p2p links (MPLS enabled)
+core_interfaces:
+  p2p_links_ip_pools:
+    - name: core_pool
+      ipv4_pool: 100.70.100.0/24
+    - name: edge_leaf_uplink_pool
+      ipv4_pool: 100.64.100.0/24
+  p2p_links_profiles:
+    - name: default_core_profile
+      # speed: forced 100gfull
+      mtu: 1500
+      isis_hello_padding: false
+      isis_metric: 50
+      ip_pool: core_pool
+      isis_circuit_type: level-2
+      isis_authentication_mode: md5
+      isis_authentication_key: $1c$sTNAlR6rKSw=
+    - name: edgeleaf_uplink_profile
+      # speed: forced 100gfull
+      mtu: 1500
+      ip_pool: edge_leaf_uplink_pool
+      include_in_underlay_protocol: false
+      raw_eos_cli: |
+        mpls ip
+        isis enable CORE
+        isis circuit-type level-2
+        isis metric 100
+        no isis hello padding
+        isis authentication mode md5
+        isis authentication key 7 $1c$sTNAlR6rKSw=
+        isis network point-to-point
+
+  p2p_links:
+    # P1 links
+    - nodes: [ PE1, P1 ]
+      id: 1
+      interfaces: [ Ethernet1, Ethernet1 ]
+      profile: default_core_profile
+
+    - nodes: [ PE2, P1 ]
+      id: 2
+      interfaces: [ Ethernet2, Ethernet2 ]
+      profile: default_core_profile
+
+    - nodes: [ P1, P2 ]
+      id: 3
+      interfaces: [ Ethernet3, Ethernet3 ]
+      profile: default_core_profile
+
+    - nodes: [ P1, RR1 ]
+      id: 4
+      interfaces: [ Ethernet4, Ethernet4 ]
+      profile: default_core_profile
+
+    - nodes: [ P1, EL1 ]
+      id: 5
+      interfaces: [ Ethernet5, Ethernet5 ]
+      profile: edgeleaf_uplink_profile
+
+    - nodes: [ P1, EL2 ]
+      id: 6
+      interfaces: [ Ethernet6, Ethernet6 ]
+      profile: edgeleaf_uplink_profile
+
+    # RR1 links
+    - nodes: [ PE1, RR1 ]
+      id: 7
+      interfaces: [ Ethernet2, Ethernet2 ]
+      profile: default_core_profile
+    - nodes: [ PE2, RR1 ]
+      id: 8
+      interfaces: [ Ethernet1, Ethernet1 ]
+      profile: default_core_profile
+    - nodes: [ RR1, RR2 ]
+      id: 9
+      interfaces: [ Ethernet3, Ethernet3 ]
+      profile: default_core_profile
+    - nodes: [ RR1, EL1 ]
+      id: 10
+      interfaces: [ Ethernet6, Ethernet6 ]
+      profile: edgeleaf_uplink_profile
+    - nodes: [ RR1, EL2 ]
+      id: 11
+      interfaces: [ Ethernet5, Ethernet5 ]
+      profile: edgeleaf_uplink_profile
+    # P2 links
+    - nodes: [ P2, PE4 ]
+      id: 12
+      interfaces: [ Ethernet5, Ethernet5 ]
+      profile: default_core_profile
+    - nodes: [ P2, RR2 ]
+      id: 13
+      interfaces: [ Ethernet4, Ethernet4 ]
+      profile: default_core_profile
+    - nodes: [ P2, PE3 ]
+      id: 14
+      interfaces: [ Ethernet1, Ethernet1 ]
+      profile: default_core_profile
+    # RR2 links
+    - nodes: [ RR2, PE5 ]
+      id: 15
+      interfaces: [ Ethernet5, Ethernet5 ]
+      profile: default_core_profile
+    - nodes: [ RR2, PE3 ]
+      id: 16
+      interfaces: [ Ethernet2, Ethernet2 ]
+      profile: default_core_profile
+    # PE4 links
+    - nodes: [ PE4, PE5 ]
+      id: 17
+      interfaces: [ Ethernet6, Ethernet6 ]
+      profile: default_core_profile

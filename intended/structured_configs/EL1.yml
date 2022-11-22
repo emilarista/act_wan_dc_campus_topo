@@ -1,0 +1,234 @@
+router_bgp:
+  as: '65102'
+  router_id: 100.64.0.11
+  bgp_defaults:
+  - no bgp default ipv4-unicast
+  - distance bgp 20 200 200
+  - graceful-restart restart-time 300
+  - graceful-restart
+  - maximum-paths 4 ecmp 4
+  peer_groups:
+    IPv4-UNDERLAY-PEERS:
+      type: ipv4
+      maximum_routes: 12000
+      send_community: all
+    EVPN-OVERLAY-PEERS:
+      type: evpn
+      update_source: Loopback0
+      bfd: true
+      ebgp_multihop: '3'
+      send_community: all
+      maximum_routes: 0
+  address_family_ipv4:
+    peer_groups:
+      IPv4-UNDERLAY-PEERS:
+        activate: true
+      EVPN-OVERLAY-PEERS:
+        activate: false
+  redistribute_routes:
+    connected:
+      route_map: RM-CONN-2-BGP
+  neighbors:
+    100.64.2.0:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65101'
+      description: S1_Ethernet1
+    100.64.2.2:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65101'
+      description: S2_Ethernet1
+    100.64.0.1:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: S1
+      remote_as: '65101'
+    100.64.0.2:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: S2
+      remote_as: '65101'
+  address_family_evpn:
+    peer_groups:
+      EVPN-OVERLAY-PEERS:
+        activate: true
+  vrfs:
+    INTERNET:
+      router_id: 100.64.0.11
+      rd: 100.64.0.11:19
+      route_targets:
+        import:
+          evpn:
+          - '19:19'
+        export:
+          evpn:
+          - '19:19'
+      redistribute_routes:
+      - connected
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+service_routing_protocols_model: multi-agent
+ip_routing: true
+daemon_terminattr:
+  cvaddrs:
+  - 192.168.0.5:9910
+  cvauth:
+    method: key
+    key: dogeface
+  cvvrf: MGMT
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  disable_aaa: false
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 3700
+    ending: 3900
+name_server:
+  source:
+    vrf: MGMT
+  nodes:
+  - 8.8.8.8
+  - 8.8.4.4
+spanning_tree:
+  mode: mstp
+  mst_instances:
+    '0':
+      priority: 4096
+local_users:
+  cvpadmin:
+    privilege: 15
+    role: network-admin
+    sha512_password: someshapassword
+  someuser:
+    privilege: 15
+    role: network-admin
+    sha512_password: someshapassword
+vrfs:
+  MGMT:
+    ip_routing: false
+  INTERNET:
+    tenant: TENANT_B
+    ip_routing: true
+management_interfaces:
+  Management1:
+    description: oob_management
+    shutdown: false
+    vrf: MGMT
+    ip_address: 192.168.0.113/24
+    gateway: 192.168.0.1
+    type: oob
+management_api_http:
+  enable_vrfs:
+    MGMT: {}
+  enable_https: true
+ethernet_interfaces:
+  Ethernet1:
+    peer: S1
+    peer_interface: Ethernet1
+    peer_type: spine
+    description: P2P_LINK_TO_S1_Ethernet1
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 100.64.2.1/31
+  Ethernet2:
+    peer: S2
+    peer_interface: Ethernet1
+    peer_type: spine
+    description: P2P_LINK_TO_S2_Ethernet1
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 100.64.2.3/31
+  Ethernet5:
+    peer: P1
+    peer_interface: Ethernet5
+    peer_type: other
+    description: P2P_LINK_TO_P1_Ethernet5
+    type: routed
+    shutdown: false
+    mtu: 1500
+    ip_address: 100.64.100.9/31
+    eos_cli: 'mpls ip
+
+      isis enable CORE
+
+      isis circuit-type level-2
+
+      isis metric 100
+
+      no isis hello padding
+
+      isis authentication mode md5
+
+      isis authentication key 7 $1c$sTNAlR6rKSw=
+
+      isis network point-to-point
+
+      '
+  Ethernet6:
+    peer: RR1
+    peer_interface: Ethernet6
+    peer_type: other
+    description: P2P_LINK_TO_RR1_Ethernet6
+    type: routed
+    shutdown: false
+    mtu: 1500
+    ip_address: 100.64.100.19/31
+    eos_cli: 'mpls ip
+
+      isis enable CORE
+
+      isis circuit-type level-2
+
+      isis metric 100
+
+      no isis hello padding
+
+      isis authentication mode md5
+
+      isis authentication key 7 $1c$sTNAlR6rKSw=
+
+      isis network point-to-point
+
+      '
+loopback_interfaces:
+  Loopback0:
+    description: EVPN_Overlay_Peering
+    shutdown: false
+    ip_address: 100.64.0.11/32
+  Loopback1:
+    description: VTEP_VXLAN_Tunnel_Source
+    shutdown: false
+    ip_address: 100.64.1.11/32
+prefix_lists:
+  PL-LOOPBACKS-EVPN-OVERLAY:
+    sequence_numbers:
+      10:
+        action: permit 100.64.0.0/24 eq 32
+      20:
+        action: permit 100.64.1.0/24 eq 32
+route_maps:
+  RM-CONN-2-BGP:
+    sequence_numbers:
+      10:
+        type: permit
+        match:
+        - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 10000
+    min_rx: 10000
+    multiplier: 3
+ip_igmp_snooping:
+  globally_enabled: true
+ip_virtual_router_mac_address: 00:1c:73:00:dc:00
+vxlan_interface:
+  Vxlan1:
+    description: EL1_VTEP
+    vxlan:
+      udp_port: 4789
+      source_interface: Loopback1
+      vrfs:
+        INTERNET:
+          vni: 19

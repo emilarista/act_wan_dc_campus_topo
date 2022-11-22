@@ -1,0 +1,127 @@
+---
+all:
+  children:
+    CVP:
+      hosts:
+        cv_server:
+          ansible_httpapi_host: 10.20.20.20
+          ansible_host: 10.20.20.20
+          ansible_user: cvpadmin
+          ansible_password: somepassword
+          ansible_connection: httpapi
+          ansible_httpapi_use_ssl: true
+          ansible_httpapi_validate_certs: false
+          ansible_network_os: eos
+          ansible_httpapi_port: 443
+          # Configuration to get Virtual Env information
+          ansible_python_interpreter: $(which python3)
+
+    # MPLS WAN Network
+    WAN:
+      children:
+        PE_ROUTERS:
+          vars:
+            type: pe
+          hosts:
+            PE1:
+              ansible_host: 10.30.30.101
+            PE2:
+              ansible_host: 10.30.30.102
+            PE3:
+              ansible_host: 10.30.30.103
+            PE4:
+              ansible_host: 10.30.30.104
+            PE5:
+              ansible_host: 10.30.30.105
+        P_ROUTERS:
+          vars:
+            type: p
+          hosts:
+            P1:
+              ansible_host: 10.30.30.106
+            P2:
+              ansible_host: 10.30.30.107
+        RR_ROUTERS:
+          vars:
+            type: rr
+          hosts:
+            RR1:
+              ansible_host: 10.30.30.108
+            RR2:
+              ansible_host: 10.30.30.109
+
+    # DC Fabric
+    DC:
+      children:
+        DC_L3LEAFS:
+          vars:
+            type: l3leaf
+          hosts:
+            L1A:
+              ansible_host: 10.30.30.110
+            L1B:
+              ansible_host: 10.30.30.111
+            L2A:
+              ansible_host: 10.30.30.112
+            L2B:
+              ansible_host: 10.30.30.113
+            EL1:
+              ansible_host: 10.30.30.114
+            EL2:
+              ansible_host: 10.30.30.115
+        DC_SPINES:
+          vars:
+            type: spine
+          hosts:
+            S1:
+              ansible_host: 10.30.30.116
+            S2:
+              ansible_host: 10.30.30.117
+
+    # CAMPUS Fabric
+    CAMPUS:
+      children:
+        CAMPUS_SPINES:
+          vars:
+            type: l3spine
+          hosts:
+            SPL1:
+              ansible_host: 10.30.30.118
+            SPL2:
+              ansible_host: 10.30.30.119
+        CAMPUS_LEAFS:
+          vars:
+            type: leaf
+          hosts:
+            L2L1A:
+              ansible_host: 10.30.30.120
+            L2L1B:
+              ansible_host: 10.30.30.121
+            L2L2A:
+              ansible_host: 10.30.30.120
+            L2L2B:
+              ansible_host: 10.30.30.121
+
+    COMMON_SETTINGS:
+      children:
+        WAN:
+        DC:
+        CAMPUS:
+
+    TENANTS:
+      children:
+        PE_ROUTERS:
+        DC_L3LEAFS:
+        CAMPUS:
+
+    DC_ENDPOINTS:
+      children:
+        DC_L3LEAFS:
+
+    CAMPUS_ENDPOINTS:
+      children:
+        CAMPUS:
+
+    WAN_ENDPOINTS:
+      children:
+        PE_ROUTERS:

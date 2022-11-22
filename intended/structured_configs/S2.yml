@@ -1,0 +1,214 @@
+router_bgp:
+  as: '65101'
+  router_id: 100.64.0.2
+  bgp_defaults:
+  - no bgp default ipv4-unicast
+  - distance bgp 20 200 200
+  - graceful-restart restart-time 300
+  - graceful-restart
+  - maximum-paths 4 ecmp 4
+  peer_groups:
+    IPv4-UNDERLAY-PEERS:
+      type: ipv4
+      maximum_routes: 12000
+      send_community: all
+    EVPN-OVERLAY-PEERS:
+      type: evpn
+      update_source: Loopback0
+      bfd: true
+      ebgp_multihop: '3'
+      send_community: all
+      maximum_routes: 0
+      next_hop_unchanged: true
+  address_family_ipv4:
+    peer_groups:
+      IPv4-UNDERLAY-PEERS:
+        activate: true
+      EVPN-OVERLAY-PEERS:
+        activate: false
+  redistribute_routes:
+    connected:
+      route_map: RM-CONN-2-BGP
+  neighbors:
+    100.64.2.3:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65102'
+      description: EL1_Ethernet2
+    100.64.2.9:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65102'
+      description: EL2_Ethernet2
+    100.64.2.15:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65103'
+      description: L1A_Ethernet2
+    100.64.2.21:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65103'
+      description: L1B_Ethernet2
+    100.64.2.27:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65104'
+      description: L2A_Ethernet2
+    100.64.2.33:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: '65104'
+      description: L2B_Ethernet2
+    100.64.0.11:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: EL1
+      remote_as: '65102'
+    100.64.0.12:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: EL2
+      remote_as: '65102'
+    100.64.0.13:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: L1A
+      remote_as: '65103'
+    100.64.0.14:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: L1B
+      remote_as: '65103'
+    100.64.0.15:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: L2A
+      remote_as: '65104'
+    100.64.0.16:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: L2B
+      remote_as: '65104'
+  address_family_evpn:
+    peer_groups:
+      EVPN-OVERLAY-PEERS:
+        activate: true
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+service_routing_protocols_model: multi-agent
+ip_routing: true
+daemon_terminattr:
+  cvaddrs:
+  - 192.168.0.5:9910
+  cvauth:
+    method: key
+    key: dogeface
+  cvvrf: MGMT
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  disable_aaa: false
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 3700
+    ending: 3900
+name_server:
+  source:
+    vrf: MGMT
+  nodes:
+  - 8.8.8.8
+  - 8.8.4.4
+spanning_tree:
+  mode: none
+local_users:
+  cvpadmin:
+    privilege: 15
+    role: network-admin
+    sha512_password: someshapassword
+  someuser:
+    privilege: 15
+    role: network-admin
+    sha512_password: someshapassword
+vrfs:
+  MGMT:
+    ip_routing: false
+management_interfaces:
+  Management1:
+    description: oob_management
+    shutdown: false
+    vrf: MGMT
+    ip_address: 192.168.0.12/24
+    gateway: 192.168.0.1
+    type: oob
+management_api_http:
+  enable_vrfs:
+    MGMT: {}
+  enable_https: true
+ethernet_interfaces:
+  Ethernet1:
+    peer: EL1
+    peer_interface: Ethernet2
+    peer_type: l3leaf
+    description: P2P_LINK_TO_EL1_Ethernet2
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 100.64.2.2/31
+  Ethernet2:
+    peer: EL2
+    peer_interface: Ethernet2
+    peer_type: l3leaf
+    description: P2P_LINK_TO_EL2_Ethernet2
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 100.64.2.8/31
+  Ethernet3:
+    peer: L1A
+    peer_interface: Ethernet2
+    peer_type: l3leaf
+    description: P2P_LINK_TO_L1A_Ethernet2
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 100.64.2.14/31
+  Ethernet4:
+    peer: L1B
+    peer_interface: Ethernet2
+    peer_type: l3leaf
+    description: P2P_LINK_TO_L1B_Ethernet2
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 100.64.2.20/31
+  Ethernet5:
+    peer: L2A
+    peer_interface: Ethernet2
+    peer_type: l3leaf
+    description: P2P_LINK_TO_L2A_Ethernet2
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 100.64.2.26/31
+  Ethernet6:
+    peer: L2B
+    peer_interface: Ethernet2
+    peer_type: l3leaf
+    description: P2P_LINK_TO_L2B_Ethernet2
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 100.64.2.32/31
+loopback_interfaces:
+  Loopback0:
+    description: EVPN_Overlay_Peering
+    shutdown: false
+    ip_address: 100.64.0.2/32
+prefix_lists:
+  PL-LOOPBACKS-EVPN-OVERLAY:
+    sequence_numbers:
+      10:
+        action: permit 100.64.0.0/24 eq 32
+route_maps:
+  RM-CONN-2-BGP:
+    sequence_numbers:
+      10:
+        type: permit
+        match:
+        - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 10000
+    min_rx: 10000
+    multiplier: 3
