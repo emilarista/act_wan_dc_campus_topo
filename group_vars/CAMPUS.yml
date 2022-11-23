@@ -22,13 +22,16 @@ l3spine:
     virtual_router_mac_address: 00:1c:73:00:dc:00
   node_groups:
     SPLINE:
+      filter:
+        tenants: [all]
+        tags: [campus]
       nodes:
         SPL1:
           id: 1
-          mgmt_ip: 172.100.100.101/24
+          mgmt_ip: 10.30.30.118/24
         SPL2:
           id: 2
-          mgmt_ip: 172.100.100.102/24
+          mgmt_ip: 10.30.30.119/24
 
 # Leaf Switches
 leaf:
@@ -45,28 +48,30 @@ leaf:
     FLOOR1:
       mlag: true
       filter:
-        tags: [bluezone, greenzone]
+        tenants: [all]
+        tags: [campus]
       nodes:
         L2L1A:
           id: 1
-          mgmt_ip: 172.100.100.105/24
+          mgmt_ip: 10.30.30.120/24
           uplink_switch_interfaces: [Ethernet3, Ethernet3]
         L2L1B:
           id: 2
-          mgmt_ip: 172.100.100.106/24
+          mgmt_ip: 10.30.30.121/24
           uplink_switch_interfaces: [Ethernet4, Ethernet4]
     FLOOR2:
       mlag: true
       filter:
-        tags: [bluezone, orangezone]
+        tenants: [all]
+        tags: [campus]
       nodes:
         L2L2A:
           id: 3
-          mgmt_ip: 172.100.100.107/24
+          mgmt_ip: 10.30.30.122/24
           uplink_switch_interfaces: [Ethernet5, Ethernet5]
         L2L2B:
           id: 4
-          mgmt_ip: 172.100.100.108/24
+          mgmt_ip: 10.30.30.123/24
           uplink_switch_interfaces: [Ethernet6, Ethernet6]
 
 #### Override for vEOS/cEOS Lab Caveats ####

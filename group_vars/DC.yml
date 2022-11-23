@@ -21,11 +21,11 @@ spine:
     S1:
       # evpn_role: server
       id: 1
-      mgmt_ip: 192.168.0.11/24
+      mgmt_ip: 10.30.30.116/24
     S2:
       # evpn_role: server
       id: 2
-      mgmt_ip: 192.168.0.12/24
+      mgmt_ip: 10.30.30.117/24
 
 # Leaf switch groups
 # A maximum of two nodes can form a leaf group
@@ -65,38 +65,38 @@ l3leaf:
       nodes:
         EL1:
           id: 1
-          mgmt_ip: 192.168.0.113/24
+          mgmt_ip: 10.30.30.114/24
           uplink_switch_interfaces: [ Ethernet1, Ethernet1 ]
         EL2:
           id: 2
-          mgmt_ip: 192.168.0.114/24
+          mgmt_ip: 10.30.30.115/24
           uplink_switch_interfaces: [ Ethernet2, Ethernet2 ]
     # Normal leafs definition
     L1:
       bgp_as: "65103"
       filter:
-        tenants: [ all ]
+        tenants: [ TENANT_A ]
         tags: [ dc ]
       nodes:
         L1A:
           id: 3
-          mgmt_ip: 192.168.0.115/24
+          mgmt_ip: 10.30.30.110/24
           uplink_switch_interfaces: [ Ethernet3, Ethernet3 ]
         L1B:
           id: 4
-          mgmt_ip: 192.168.0.116/24
+          mgmt_ip: 10.30.30.111/24
           uplink_switch_interfaces: [ Ethernet4, Ethernet4 ]
     L2:
       bgp_as: "65104"
       filter:
-        tenants: [ all ]
+        tenants: [ TENANT_B ]
         tags: [ dc ]
       nodes:
         L2A:
           id: 5
-          mgmt_ip: 192.168.0.115/24
+          mgmt_ip: 10.30.30.112/24
           uplink_switch_interfaces: [ Ethernet5, Ethernet5 ]
         L2B:
           id: 6
-          mgmt_ip: 192.168.0.116/24
+          mgmt_ip: 10.30.30.113/24
           uplink_switch_interfaces: [ Ethernet6, Ethernet6 ]

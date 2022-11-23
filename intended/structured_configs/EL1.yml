@@ -50,18 +50,47 @@ router_bgp:
       EVPN-OVERLAY-PEERS:
         activate: true
   vrfs:
-    INTERNET:
+    A_VRF01:
       router_id: 100.64.0.11
-      rd: 100.64.0.11:19
+      rd: 100.64.0.11:1
       route_targets:
         import:
           evpn:
-          - '19:19'
+          - '1:1'
         export:
           evpn:
-          - '19:19'
+          - '1:1'
       redistribute_routes:
       - connected
+    B_VRF01:
+      router_id: 100.64.0.11
+      rd: 100.64.0.11:101
+      route_targets:
+        import:
+          evpn:
+          - 101:101
+        export:
+          evpn:
+          - 101:101
+      redistribute_routes:
+      - connected
+  vlans:
+    10:
+      tenant: TENANT_B
+      rd: 100.64.0.11:20010
+      route_targets:
+        both:
+        - 20010:20010
+      redistribute_routes:
+      - learned
+    11:
+      tenant: TENANT_B
+      rd: 100.64.0.11:20011
+      route_targets:
+        both:
+        - 20011:20011
+      redistribute_routes:
+      - learned
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -106,7 +135,10 @@ local_users:
 vrfs:
   MGMT:
     ip_routing: false
-  INTERNET:
+  A_VRF01:
+    tenant: TENANT_A
+    ip_routing: true
+  B_VRF01:
     tenant: TENANT_B
     ip_routing: true
 management_interfaces:
@@ -114,7 +146,7 @@ management_interfaces:
     description: oob_management
     shutdown: false
     vrf: MGMT
-    ip_address: 192.168.0.113/24
+    ip_address: 10.30.30.114/24
     gateway: 192.168.0.1
     type: oob
 management_api_http:
@@ -148,7 +180,6 @@ ethernet_interfaces:
     type: routed
     shutdown: false
     mtu: 1500
-    ip_address: 100.64.100.9/31
     eos_cli: 'mpls ip
 
       isis enable CORE
@@ -166,6 +197,7 @@ ethernet_interfaces:
       isis network point-to-point
 
       '
+    ip_address: 100.64.100.9/31
   Ethernet6:
     peer: RR1
     peer_interface: Ethernet6
@@ -174,7 +206,6 @@ ethernet_interfaces:
     type: routed
     shutdown: false
     mtu: 1500
-    ip_address: 100.64.100.19/31
     eos_cli: 'mpls ip
 
       isis enable CORE
@@ -192,6 +223,7 @@ ethernet_interfaces:
       isis network point-to-point
 
       '
+    ip_address: 100.64.100.19/31
 loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
@@ -220,15 +252,46 @@ router_bfd:
     interval: 10000
     min_rx: 10000
     multiplier: 3
+vlans:
+  10:
+    tenant: TENANT_B
+    name: B_DC_10
+  11:
+    tenant: TENANT_B
+    name: B_DC_11
 ip_igmp_snooping:
   globally_enabled: true
 ip_virtual_router_mac_address: 00:1c:73:00:dc:00
+vlan_interfaces:
+  Vlan10:
+    tenant: TENANT_B
+    tags:
+    - dc
+    description: B_DC_10
+    shutdown: false
+    ip_address_virtual: 10.0.10.1/24
+    vrf: B_VRF01
+  Vlan11:
+    tenant: TENANT_B
+    tags:
+    - dc
+    description: B_DC_11
+    shutdown: false
+    ip_address_virtual: 10.0.11.1/24
+    vrf: B_VRF01
 vxlan_interface:
   Vxlan1:
     description: EL1_VTEP
     vxlan:
       udp_port: 4789
       source_interface: Loopback1
+      vlans:
+        10:
+          vni: 20010
+        11:
+          vni: 20011
       vrfs:
-        INTERNET:
-          vni: 19
+        A_VRF01:
+          vni: 1
+        B_VRF01:
+          vni: 101

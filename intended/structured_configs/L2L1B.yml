@@ -48,7 +48,7 @@ management_interfaces:
     description: oob_management
     shutdown: false
     vrf: MGMT
-    ip_address: 172.100.100.106/24
+    ip_address: 10.30.30.121/24
     gateway: 192.168.0.1
     type: oob
 management_api_http:
@@ -61,6 +61,18 @@ vlans:
     name: MLAG_PEER
     trunk_groups:
     - MLAG
+  101:
+    tenant: TENANT_A
+    name: A_CAMPUS_101
+  102:
+    tenant: TENANT_A
+    name: A_CAMPUS_102
+  1101:
+    tenant: TENANT_B
+    name: B_CAMPUS_1101
+  1102:
+    tenant: TENANT_B
+    name: B_CAMPUS_1102
 vlan_interfaces:
   Vlan4094:
     description: MLAG_PEER
@@ -81,7 +93,7 @@ port_channel_interfaces:
     description: SPLINE_Po3
     type: switched
     shutdown: false
-    vlans: none
+    vlans: 101-102,1101-1102
     mode: trunk
     mlag: 1
 ethernet_interfaces:

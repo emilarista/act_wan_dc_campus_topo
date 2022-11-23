@@ -32,6 +32,31 @@ router_bgp:
     100.70.1.2:
       peer_group: MPLS-OVERLAY-PEERS
       description: RR2
+  vrfs:
+    A_VRF01:
+      router_id: 100.70.2.1
+      rd: 100.70.2.1:1
+      route_targets:
+        import:
+          vpn-ipv4:
+          - '65000:1'
+        export:
+          vpn-ipv4:
+          - '65000:1'
+      redistribute_routes:
+      - connected
+    B_VRF01:
+      router_id: 100.70.2.1
+      rd: 100.70.2.1:101
+      route_targets:
+        import:
+          vpn-ipv4:
+          - 65000:101
+        export:
+          vpn-ipv4:
+          - 65000:101
+      redistribute_routes:
+      - connected
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -77,6 +102,12 @@ local_users:
 vrfs:
   MGMT:
     ip_routing: false
+  A_VRF01:
+    tenant: TENANT_A
+    ip_routing: true
+  B_VRF01:
+    tenant: TENANT_B
+    ip_routing: true
 management_interfaces:
   Management1:
     description: oob_management
@@ -157,6 +188,24 @@ ethernet_interfaces:
     isis_authentication_key: $1c$sTNAlR6rKSw=
     mpls:
       ip: true
+  Ethernet3.10:
+    peer_type: l3_interface
+    ip_address: 172.16.11.1/29
+    shutdown: false
+    type: l3dot1q
+    encapsulation_dot1q_vlan: 10
+    vrf: A_VRF01
+  Ethernet3.11:
+    peer_type: l3_interface
+    ip_address: 172.16.11.9/29
+    shutdown: false
+    type: l3dot1q
+    encapsulation_dot1q_vlan: 11
+    vrf: B_VRF01
+  Ethernet3:
+    type: routed
+    peer_type: l3_interface
+    shutdown: false
 router_bfd:
   multihop:
     interval: 10000

@@ -32,6 +32,33 @@ router_bgp:
     100.70.1.2:
       peer_group: MPLS-OVERLAY-PEERS
       description: RR2
+  vrfs:
+    A_VRF01:
+      router_id: 100.70.2.4
+      rd: 100.70.2.4:1
+      route_targets:
+        import:
+          vpn-ipv4:
+          - '65000:1'
+        export:
+          vpn-ipv4:
+          - '65000:1'
+      redistribute_routes:
+      - connected
+      - ospf
+    B_VRF01:
+      router_id: 100.70.2.4
+      rd: 100.70.2.4:101
+      route_targets:
+        import:
+          vpn-ipv4:
+          - 65000:101
+        export:
+          vpn-ipv4:
+          - 65000:101
+      redistribute_routes:
+      - connected
+      - ospf
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -77,12 +104,18 @@ local_users:
 vrfs:
   MGMT:
     ip_routing: false
+  A_VRF01:
+    tenant: TENANT_A
+    ip_routing: true
+  B_VRF01:
+    tenant: TENANT_B
+    ip_routing: true
 management_interfaces:
   Management1:
     description: oob_management
     shutdown: false
     vrf: MGMT
-    ip_address: 10.30.30.105/24
+    ip_address: 10.30.30.104/24
     gateway: 192.168.0.1
     type: oob
 management_api_http:
@@ -157,6 +190,50 @@ ethernet_interfaces:
     isis_authentication_key: $1c$sTNAlR6rKSw=
     mpls:
       ip: true
+  Ethernet1.10:
+    peer_type: l3_interface
+    ip_address: 192.168.13.0/31
+    shutdown: false
+    type: l3dot1q
+    encapsulation_dot1q_vlan: 10
+    vrf: A_VRF01
+    ospf_area: 0
+    ospf_network_point_to_point: false
+  Ethernet2.10:
+    peer_type: l3_interface
+    ip_address: 192.168.13.2/31
+    shutdown: false
+    type: l3dot1q
+    encapsulation_dot1q_vlan: 10
+    vrf: A_VRF01
+    ospf_area: 0
+    ospf_network_point_to_point: false
+  Ethernet1.11:
+    peer_type: l3_interface
+    ip_address: 192.168.14.0/31
+    shutdown: false
+    type: l3dot1q
+    encapsulation_dot1q_vlan: 11
+    vrf: B_VRF01
+    ospf_area: 0
+    ospf_network_point_to_point: false
+  Ethernet2.11:
+    peer_type: l3_interface
+    ip_address: 192.168.14.2/31
+    shutdown: false
+    type: l3dot1q
+    encapsulation_dot1q_vlan: 11
+    vrf: B_VRF01
+    ospf_area: 0
+    ospf_network_point_to_point: false
+  Ethernet1:
+    type: routed
+    peer_type: l3_interface
+    shutdown: false
+  Ethernet2:
+    type: routed
+    peer_type: l3_interface
+    shutdown: false
 router_bfd:
   multihop:
     interval: 10000
@@ -165,3 +242,23 @@ router_bfd:
 ip_igmp_snooping:
   globally_enabled: true
 ip_virtual_router_mac_address: 00:1c:73:00:dc:00
+router_ospf:
+  process_ids:
+    1:
+      vrf: A_VRF01
+      passive_interface_default: true
+      router_id: 100.70.2.4
+      no_passive_interfaces:
+      - Ethernet1.10
+      - Ethernet2.10
+      redistribute:
+        bgp: {}
+    101:
+      vrf: B_VRF01
+      passive_interface_default: true
+      router_id: 100.70.2.4
+      no_passive_interfaces:
+      - Ethernet1.11
+      - Ethernet2.11
+      redistribute:
+        bgp: {}

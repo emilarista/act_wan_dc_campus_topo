@@ -1,0 +1,420 @@
+---
+
+cvp:
+  instance: singlenode
+  password: cvproot
+  username: root
+  version: 2022.2.0
+generic:
+  password: arista1234
+  username: cvpadmin
+  version: Rocky-8.5
+veos:
+  password: arista1234
+  username: cvpadmin
+  version: 4.27.6M
+
+nodes:
+  - EL1:
+      ip_addr: 10.30.30.114
+      neighbors:
+      - neighborDevice: S1
+        neighborPort: Ethernet1
+        port: Ethernet1
+      - neighborDevice: S2
+        neighborPort: Ethernet1
+        port: Ethernet2
+      - neighborDevice: P1
+        neighborPort: Ethernet5
+        port: Ethernet5
+      - neighborDevice: RR1
+        neighborPort: Ethernet6
+        port: Ethernet6
+      node_type: veos
+      ports: []
+  - EL2:
+      ip_addr: 10.30.30.115
+      neighbors:
+      - neighborDevice: S1
+        neighborPort: Ethernet2
+        port: Ethernet1
+      - neighborDevice: S2
+        neighborPort: Ethernet2
+        port: Ethernet2
+      - neighborDevice: P1
+        neighborPort: Ethernet6
+        port: Ethernet6
+      - neighborDevice: RR1
+        neighborPort: Ethernet5
+        port: Ethernet5
+      node_type: veos
+      ports: []
+  - L1A:
+      ip_addr: 10.30.30.110
+      neighbors:
+      - neighborDevice: L1B
+        neighborPort: Ethernet3
+        port: Ethernet3
+      - neighborDevice: L1B
+        neighborPort: Ethernet4
+        port: Ethernet4
+      - neighborDevice: S1
+        neighborPort: Ethernet3
+        port: Ethernet1
+      - neighborDevice: S2
+        neighborPort: Ethernet3
+        port: Ethernet2
+      node_type: veos
+      ports: []
+  - L1B:
+      ip_addr: 10.30.30.111
+      neighbors:
+      - neighborDevice: L1A
+        neighborPort: Ethernet3
+        port: Ethernet3
+      - neighborDevice: L1A
+        neighborPort: Ethernet4
+        port: Ethernet4
+      - neighborDevice: S1
+        neighborPort: Ethernet4
+        port: Ethernet1
+      - neighborDevice: S2
+        neighborPort: Ethernet4
+        port: Ethernet2
+      node_type: veos
+      ports: []
+  - L2A:
+      ip_addr: 10.30.30.112
+      neighbors:
+      - neighborDevice: L2B
+        neighborPort: Ethernet3
+        port: Ethernet3
+      - neighborDevice: L2B
+        neighborPort: Ethernet4
+        port: Ethernet4
+      - neighborDevice: S1
+        neighborPort: Ethernet5
+        port: Ethernet1
+      - neighborDevice: S2
+        neighborPort: Ethernet5
+        port: Ethernet2
+      node_type: veos
+      ports: []
+  - L2B:
+      ip_addr: 10.30.30.113
+      neighbors:
+      - neighborDevice: L2A
+        neighborPort: Ethernet3
+        port: Ethernet3
+      - neighborDevice: L2A
+        neighborPort: Ethernet4
+        port: Ethernet4
+      - neighborDevice: S1
+        neighborPort: Ethernet6
+        port: Ethernet1
+      - neighborDevice: S2
+        neighborPort: Ethernet6
+        port: Ethernet2
+      node_type: veos
+      ports: []
+  - L2L1A:
+      ip_addr: 10.30.30.120
+      neighbors:
+      - neighborDevice: L2L1B
+        neighborPort: Ethernet3
+        port: Ethernet3
+      - neighborDevice: L2L1B
+        neighborPort: Ethernet4
+        port: Ethernet4
+      - neighborDevice: SPL1
+        neighborPort: Ethernet3
+        port: Ethernet1
+      - neighborDevice: SPL2
+        neighborPort: Ethernet3
+        port: Ethernet2
+      node_type: veos
+      ports: []
+  - L2L1B:
+      ip_addr: 10.30.30.121
+      neighbors:
+      - neighborDevice: L2L1A
+        neighborPort: Ethernet3
+        port: Ethernet3
+      - neighborDevice: L2L1A
+        neighborPort: Ethernet4
+        port: Ethernet4
+      - neighborDevice: SPL1
+        neighborPort: Ethernet4
+        port: Ethernet1
+      - neighborDevice: SPL2
+        neighborPort: Ethernet4
+        port: Ethernet2
+      node_type: veos
+      ports: []
+  - L2L2A:
+      ip_addr: 10.30.30.122
+      neighbors:
+      - neighborDevice: L2L2B
+        neighborPort: Ethernet3
+        port: Ethernet3
+      - neighborDevice: L2L2B
+        neighborPort: Ethernet4
+        port: Ethernet4
+      - neighborDevice: SPL1
+        neighborPort: Ethernet5
+        port: Ethernet1
+      - neighborDevice: SPL2
+        neighborPort: Ethernet5
+        port: Ethernet2
+      node_type: veos
+      ports: []
+  - L2L2B:
+      ip_addr: 10.30.30.123
+      neighbors:
+      - neighborDevice: L2L2A
+        neighborPort: Ethernet3
+        port: Ethernet3
+      - neighborDevice: L2L2A
+        neighborPort: Ethernet4
+        port: Ethernet4
+      - neighborDevice: SPL1
+        neighborPort: Ethernet6
+        port: Ethernet1
+      - neighborDevice: SPL2
+        neighborPort: Ethernet6
+        port: Ethernet2
+      node_type: veos
+      ports: []
+  - P1:
+      ip_addr: 10.30.30.106
+      neighbors:
+      - neighborDevice: PE1
+        neighborPort: Ethernet1
+        port: Ethernet1
+      - neighborDevice: PE2
+        neighborPort: Ethernet2
+        port: Ethernet2
+      - neighborDevice: P2
+        neighborPort: Ethernet3
+        port: Ethernet3
+      - neighborDevice: RR1
+        neighborPort: Ethernet4
+        port: Ethernet4
+      - neighborDevice: EL1
+        neighborPort: Ethernet5
+        port: Ethernet5
+      - neighborDevice: EL2
+        neighborPort: Ethernet6
+        port: Ethernet6
+      node_type: veos
+      ports: []
+  - P2:
+      ip_addr: 10.30.30.107
+      neighbors:
+      - neighborDevice: P1
+        neighborPort: Ethernet3
+        port: Ethernet3
+      - neighborDevice: PE4
+        neighborPort: Ethernet5
+        port: Ethernet5
+      - neighborDevice: RR2
+        neighborPort: Ethernet4
+        port: Ethernet4
+      - neighborDevice: PE3
+        neighborPort: Ethernet1
+        port: Ethernet1
+      node_type: veos
+      ports: []
+  - PE1:
+      ip_addr: 10.30.30.101
+      neighbors:
+      - neighborDevice: P1
+        neighborPort: Ethernet1
+        port: Ethernet1
+      - neighborDevice: RR1
+        neighborPort: Ethernet2
+        port: Ethernet2
+      node_type: veos
+      ports: []
+  - PE2:
+      ip_addr: 10.30.30.102
+      neighbors:
+      - neighborDevice: P1
+        neighborPort: Ethernet2
+        port: Ethernet2
+      - neighborDevice: RR1
+        neighborPort: Ethernet1
+        port: Ethernet1
+      node_type: veos
+      ports: []
+  - PE3:
+      ip_addr: 10.30.30.103
+      neighbors:
+      - neighborDevice: P2
+        neighborPort: Ethernet1
+        port: Ethernet1
+      - neighborDevice: RR2
+        neighborPort: Ethernet2
+        port: Ethernet2
+      node_type: veos
+      ports: []
+  - PE4:
+      ip_addr: 10.30.30.104
+      neighbors:
+      - neighborDevice: P2
+        neighborPort: Ethernet5
+        port: Ethernet5
+      - neighborDevice: PE5
+        neighborPort: Ethernet6
+        port: Ethernet6
+      node_type: veos
+      ports: []
+  - PE5:
+      ip_addr: 10.30.30.105
+      neighbors:
+      - neighborDevice: RR2
+        neighborPort: Ethernet5
+        port: Ethernet5
+      - neighborDevice: PE4
+        neighborPort: Ethernet6
+        port: Ethernet6
+      node_type: veos
+      ports: []
+  - RR1:
+      ip_addr: 10.30.30.108
+      neighbors:
+      - neighborDevice: P1
+        neighborPort: Ethernet4
+        port: Ethernet4
+      - neighborDevice: PE1
+        neighborPort: Ethernet2
+        port: Ethernet2
+      - neighborDevice: PE2
+        neighborPort: Ethernet1
+        port: Ethernet1
+      - neighborDevice: RR2
+        neighborPort: Ethernet3
+        port: Ethernet3
+      - neighborDevice: EL1
+        neighborPort: Ethernet6
+        port: Ethernet6
+      - neighborDevice: EL2
+        neighborPort: Ethernet5
+        port: Ethernet5
+      node_type: veos
+      ports: []
+  - RR2:
+      ip_addr: 10.30.30.109
+      neighbors:
+      - neighborDevice: RR1
+        neighborPort: Ethernet3
+        port: Ethernet3
+      - neighborDevice: P2
+        neighborPort: Ethernet4
+        port: Ethernet4
+      - neighborDevice: PE5
+        neighborPort: Ethernet5
+        port: Ethernet5
+      - neighborDevice: PE3
+        neighborPort: Ethernet2
+        port: Ethernet2
+      node_type: veos
+      ports: []
+  - S1:
+      ip_addr: 10.30.30.116
+      neighbors:
+      - neighborDevice: EL1
+        neighborPort: Ethernet1
+        port: Ethernet1
+      - neighborDevice: EL2
+        neighborPort: Ethernet1
+        port: Ethernet2
+      - neighborDevice: L1A
+        neighborPort: Ethernet1
+        port: Ethernet3
+      - neighborDevice: L1B
+        neighborPort: Ethernet1
+        port: Ethernet4
+      - neighborDevice: L2A
+        neighborPort: Ethernet1
+        port: Ethernet5
+      - neighborDevice: L2B
+        neighborPort: Ethernet1
+        port: Ethernet6
+      node_type: veos
+      ports: []
+  - S2:
+      ip_addr: 10.30.30.117
+      neighbors:
+      - neighborDevice: EL1
+        neighborPort: Ethernet2
+        port: Ethernet1
+      - neighborDevice: EL2
+        neighborPort: Ethernet2
+        port: Ethernet2
+      - neighborDevice: L1A
+        neighborPort: Ethernet2
+        port: Ethernet3
+      - neighborDevice: L1B
+        neighborPort: Ethernet2
+        port: Ethernet4
+      - neighborDevice: L2A
+        neighborPort: Ethernet2
+        port: Ethernet5
+      - neighborDevice: L2B
+        neighborPort: Ethernet2
+        port: Ethernet6
+      node_type: veos
+      ports: []
+  - SPL1:
+      ip_addr: 10.30.30.118
+      neighbors:
+      - neighborDevice: SPL2
+        neighborPort: Ethernet1
+        port: Ethernet1
+      - neighborDevice: SPL2
+        neighborPort: Ethernet2
+        port: Ethernet2
+      - neighborDevice: L2L1A
+        neighborPort: Ethernet1
+        port: Ethernet3
+      - neighborDevice: L2L1B
+        neighborPort: Ethernet1
+        port: Ethernet4
+      - neighborDevice: L2L2A
+        neighborPort: Ethernet1
+        port: Ethernet5
+      - neighborDevice: L2L2B
+        neighborPort: Ethernet1
+        port: Ethernet6
+      node_type: veos
+      ports: []
+  - SPL2:
+      ip_addr: 10.30.30.119
+      neighbors:
+      - neighborDevice: SPL1
+        neighborPort: Ethernet1
+        port: Ethernet1
+      - neighborDevice: SPL1
+        neighborPort: Ethernet2
+        port: Ethernet2
+      - neighborDevice: L2L1A
+        neighborPort: Ethernet2
+        port: Ethernet3
+      - neighborDevice: L2L1B
+        neighborPort: Ethernet2
+        port: Ethernet4
+      - neighborDevice: L2L2A
+        neighborPort: Ethernet2
+        port: Ethernet5
+      - neighborDevice: L2L2B
+        neighborPort: Ethernet2
+        port: Ethernet6
+      node_type: veos
+      ports: []
+  - cvp:
+      ip_addr: 192.168.0.5
+      node_type: cvp
+  - ansible:
+      ip_addr: 192.168.0.6
+      node_type: generic

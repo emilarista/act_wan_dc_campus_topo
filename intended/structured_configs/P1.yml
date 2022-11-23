@@ -44,7 +44,7 @@ management_interfaces:
     description: oob_management
     shutdown: false
     vrf: MGMT
-    ip_address: 10.30.30.104/24
+    ip_address: 10.30.30.106/24
     gateway: 192.168.0.1
     type: oob
 management_api_http:
@@ -163,9 +163,6 @@ ethernet_interfaces:
     type: routed
     shutdown: false
     mtu: 1500
-    ip_address: 100.64.100.8/31
-    mpls:
-      ip: true
     eos_cli: 'mpls ip
 
       isis enable CORE
@@ -183,6 +180,9 @@ ethernet_interfaces:
       isis network point-to-point
 
       '
+    ip_address: 100.64.100.8/31
+    mpls:
+      ip: true
   Ethernet6:
     peer: EL2
     peer_interface: Ethernet6
@@ -191,9 +191,6 @@ ethernet_interfaces:
     type: routed
     shutdown: false
     mtu: 1500
-    ip_address: 100.64.100.10/31
-    mpls:
-      ip: true
     eos_cli: 'mpls ip
 
       isis enable CORE
@@ -211,3 +208,6 @@ ethernet_interfaces:
       isis network point-to-point
 
       '
+    ip_address: 100.64.100.10/31
+    mpls:
+      ip: true

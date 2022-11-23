@@ -52,10 +52,10 @@ p:
   nodes:
     P1:
       id: 1
-      mgmt_ip: 10.30.30.104/24
+      mgmt_ip: 10.30.30.106/24
     P2:
       id: 2
-      mgmt_ip: 10.30.30.106/24
+      mgmt_ip: 10.30.30.107/24
 
 # Leaf switch groups
 # A maximum of two nodes can form a leaf group
@@ -81,7 +81,7 @@ pe:
     PE1-2:
       filter:
         tenants: [ all ]
-        tags: [ site1 ]
+        tags: [ wan-site1 ]
       nodes:
         PE1:
           id: 1
@@ -92,7 +92,7 @@ pe:
     PE3:
       filter:
         tenants: [ all ]
-        tags: [ site2 ]
+        tags: [ wan-site2 ]
       nodes:
         PE3:
           id: 3
@@ -100,11 +100,11 @@ pe:
     PE4-5:
       filter:
         tenants: [ all ]
-        tags: [ site3 ]
+        tags: [ wan-site3 ]
       nodes:
         PE4:
           id: 4
-          mgmt_ip: 10.30.30.105/24
+          mgmt_ip: 10.30.30.104/24
         PE5:
           id: 5
           mgmt_ip: 10.30.30.105/24
@@ -129,10 +129,10 @@ rr:
       nodes:
         RR1:
           id: 1
-          mgmt_ip: 10.30.30.107/24
+          mgmt_ip: 10.30.30.108/24
         RR2:
           id: 2
-          mgmt_ip: 10.30.30.108/24
+          mgmt_ip: 10.30.30.109/24
 
 
 

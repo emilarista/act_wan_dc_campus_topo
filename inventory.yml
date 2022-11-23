@@ -98,9 +98,9 @@ all:
             L2L1B:
               ansible_host: 10.30.30.121
             L2L2A:
-              ansible_host: 10.30.30.120
+              ansible_host: 10.30.30.122
             L2L2B:
-              ansible_host: 10.30.30.121
+              ansible_host: 10.30.30.123
 
     COMMON_SETTINGS:
       children:
