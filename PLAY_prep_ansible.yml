@@ -1,0 +1,83 @@
+---
+- name: Prep Ansible Host
+  hosts: automation_hosts
+  gather_facts: no
+  tasks:
+
+    # - name: Upgrade all packages
+    #   ansible.builtin.yum:
+    #     name: '*'
+    #     state: latest
+    #     update_cache: yes
+
+    - name: Install Git
+      ansible.builtin.yum:
+        name: 'git'
+        state: latest
+
+    - name: Install Make
+      ansible.builtin.yum:
+        name: 'make'
+        state: latest
+
+    - name: Clone ACB_2022 repo
+      ansible.builtin.git:
+        repo: https://pmathy1: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@github.com/emilarista/acb_2022.git
+        dest: ./acb_2022
+
+    - name: Change directory ownership
+      file: dest=/home/cvpadmin/acb_2022 owner=cvpadmin group=cvpadmin recurse=yes
+
+    - name: Install Python 3.9
+      ansible.builtin.yum:
+        name: 'python39'
+        state: latest
+
+    - name: pip install virtualenv
+      ansible.builtin.pip:
+        name: virtualenv
+        executable: pip3.9
+
+    - name: Install ansible-core into virtualenv
+      ansible.builtin.pip:
+        name: ansible-core==2.12.8
+        virtualenv: "/home/cvpadmin/.avdvenv"
+        virtualenv_python: python3.9
+      environment:
+        PATH: "/usr/local/bin/"
+        SETUPTOOLS_USE_DISTUTILS: stdlib
+
+    - name: Install Arista AVD collection
+      community.general.ansible_galaxy_install:
+        type: collection
+        name: arista.avd
+        dest: "/home/cvpadmin"
+      environment:
+        PATH: "/home/cvpadmin/.avdvenv/bin/"
+
+    - name: Install AVD requirements
+      ansible.builtin.pip:
+        requirements: "/home/cvpadmin/ansible_collections/arista/avd/requirements.txt"
+        virtualenv: "/home/cvpadmin/.avdvenv"
+        virtualenv_python: python3.9
+      environment:
+        PATH: "/usr/local/bin/"
+        SETUPTOOLS_USE_DISTUTILS: stdlib
+
+    - name: Install robotframework
+      ansible.builtin.pip:
+        name: robotframework
+        virtualenv: "/home/cvpadmin/.avdvenv"
+        virtualenv_python: python3.9
+      environment:
+        PATH: "/usr/local/bin/"
+        SETUPTOOLS_USE_DISTUTILS: stdlib
+
+    - name: Install robotframework-sshlibrary
+      ansible.builtin.pip:
+        name: robotframework-sshlibrary
+        virtualenv: "/home/cvpadmin/.avdvenv"
+        virtualenv_python: python3.9
+      environment:
+        PATH: "/usr/local/bin/"
+        SETUPTOOLS_USE_DISTUTILS: stdlib

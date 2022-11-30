@@ -1,6 +1,31 @@
 ---
 all:
   children:
+    GIT:
+      hosts:
+        gitlab:
+          ansible_host: 10.255.0.66
+          ansible_user: cvpadmin
+          ansible_password: arista1234
+          ansible_become: yes
+          ansible_become_pass: arista1234
+    IPAM:
+      hosts:
+        nautobot:
+          ansible_host: 10.255.115.226
+          ansible_user: cvpadmin
+          ansible_password: arista1234
+          ansible_become: yes
+          ansible_become_pass: arista1234
+    ANSIBLE_BOX:
+      hosts:
+        ansible:
+          ansible_host: 10.255.71.41
+          ansible_user: cvpadmin
+          ansible_password: arista1234
+          ansible_become: yes
+          ansible_become_pass: arista1234
+
     CVP:
       hosts:
         cv_server:

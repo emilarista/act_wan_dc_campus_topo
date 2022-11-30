@@ -1,0 +1,105 @@
+---
+- name: Prep Ansible Host
+  hosts: gitlab
+  gather_facts: no
+  tasks:
+
+    # Update dnf cache
+    - name: Upgrade all packages
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest
+        update_cache: yes
+
+    # Install nautobot dependencies
+    - name: Install nautobot dependencies
+      ansible.builtin.dnf:
+        name:
+          - python38
+          - python38-devel
+          - python38-pip
+          - redis
+          - postgresql-server
+        state: latest
+
+    # Run postgres setup
+    - name: Run gitlab-reconfigure
+      ansible.builtin.shell: "postgresql-setup --initdb"
+
+    # Make sure postgresql and redis is started and enabled
+    - name: Start service postgresql, if not started
+      ansible.builtin.service:
+        name:
+          - postgresql
+          - redis
+        state: started
+        enabled: yes
+
+    - name: create postgresql user
+      postgresql_user:
+        user: "nautobot"
+        password: "nbpassword"
+        role_attr_flags: "CREATEDB,NOSUPERUSER"
+      become: true
+      become_user: postgres
+
+    - name: Create a new database for nautobot
+      community.postgresql.postgresql_db:
+        name: nautobot
+        state: present
+      become: true
+      become_user: postgres
+
+    - name: Ensure we have access from the new user
+      become: yes
+      become_user: postgres
+      postgresql_privs:
+        db: nautobot
+        role: nautobot
+        objs: ALL_IN_SCHEMA
+        privs: ALL
+
+    # - name: Connect to acme database and set user's password with no expire date
+    #   community.postgresql.postgresql_user:
+    #     db: nautobot
+    #     name: nautobot
+    #     password: nbpassword
+    #     priv: "CONNECT/products:ALL"
+    #     expires: infinity
+
+    # Get gitlab repo script
+    - name: Download gitlab repo script
+      ansible.builtin.get_url:
+        url: https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh
+        dest: /home/cvpadmin/script.rpm.sh
+        mode: '0775'
+
+    # Run gitlab-reconfigure
+    - name: Run gitlab-reconfigure
+      ansible.builtin.shell: "os=el dist=8 ./script.rpm.sh"
+
+    # Install gitlab-ce
+    - name: Install gitlab-ce
+      ansible.builtin.dnf:
+        name: 'gitlab-ce'
+        state: latest
+
+    # Set gitlab external URL
+    - name: Set gitlab external URL
+      ansible.builtin.lineinfile:
+        path: /etc/gitlab/gitlab.rb
+        regexp: '^# external_url'
+        line: 'external_url "https://{{ ansible_host }}"'
+
+    # Run gitlab-reconfigure
+    - name: Run gitlab-reconfigure
+      ansible.builtin.shell: "gitlab-ctl reconfigure"
+
+    # Get gitlab initial password
+    - name: Get gitlab initial password
+      ansible.builtin.shell: cat /etc/gitlab/initial_root_password
+      register: file_content
+
+    - name: "Print the gitlab initial password"
+      debug:
+        msg: "{{ file_content.stdout }}"
