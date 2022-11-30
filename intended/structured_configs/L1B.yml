@@ -262,6 +262,13 @@ ethernet_interfaces:
     type: routed
     shutdown: false
     ip_address: 100.64.2.21/31
+  Ethernet5:
+    peer: A_SERVER2
+    peer_interface: Ethernet1
+    peer_type: server
+    description: A_SERVER2_Ethernet1
+    type: switched
+    shutdown: false
 mlag_configuration:
   domain_id: L1
   local_interface: Vlan4094

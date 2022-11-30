@@ -65,7 +65,8 @@ nodes:
         neighborPort: Ethernet3
         port: Ethernet2
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet5
   - L1B:
       ip_addr: 10.30.30.111
       neighbors:
@@ -82,7 +83,8 @@ nodes:
         neighborPort: Ethernet4
         port: Ethernet2
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet5
   - L2A:
       ip_addr: 10.30.30.112
       neighbors:
@@ -99,7 +101,8 @@ nodes:
         neighborPort: Ethernet5
         port: Ethernet2
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet5
   - L2B:
       ip_addr: 10.30.30.113
       neighbors:
@@ -116,7 +119,8 @@ nodes:
         neighborPort: Ethernet6
         port: Ethernet2
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet5
   - L2L1A:
       ip_addr: 10.30.30.120
       neighbors:
@@ -133,7 +137,18 @@ nodes:
         neighborPort: Ethernet3
         port: Ethernet2
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet5
+      - Ethernet6
+      - Ethernet7
+      - Ethernet8
+      - Ethernet9
+      - Ethernet10
+      - Ethernet11
+      - Ethernet12
+      - Ethernet13
+      - Ethernet14
+      - Ethernet15
   - L2L1B:
       ip_addr: 10.30.30.121
       neighbors:
@@ -150,7 +165,18 @@ nodes:
         neighborPort: Ethernet4
         port: Ethernet2
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet5
+      - Ethernet6
+      - Ethernet7
+      - Ethernet8
+      - Ethernet9
+      - Ethernet10
+      - Ethernet11
+      - Ethernet12
+      - Ethernet13
+      - Ethernet14
+      - Ethernet15
   - L2L2A:
       ip_addr: 10.30.30.122
       neighbors:
@@ -167,7 +193,18 @@ nodes:
         neighborPort: Ethernet5
         port: Ethernet2
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet5
+      - Ethernet6
+      - Ethernet7
+      - Ethernet8
+      - Ethernet9
+      - Ethernet10
+      - Ethernet11
+      - Ethernet12
+      - Ethernet13
+      - Ethernet14
+      - Ethernet15
   - L2L2B:
       ip_addr: 10.30.30.123
       neighbors:
@@ -184,7 +221,18 @@ nodes:
         neighborPort: Ethernet6
         port: Ethernet2
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet5
+      - Ethernet6
+      - Ethernet7
+      - Ethernet8
+      - Ethernet9
+      - Ethernet10
+      - Ethernet11
+      - Ethernet12
+      - Ethernet13
+      - Ethernet14
+      - Ethernet15
   - P1:
       ip_addr: 10.30.30.106
       neighbors:
@@ -235,7 +283,8 @@ nodes:
         neighborPort: Ethernet2
         port: Ethernet2
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet3
   - PE2:
       ip_addr: 10.30.30.102
       neighbors:
@@ -246,7 +295,8 @@ nodes:
         neighborPort: Ethernet1
         port: Ethernet1
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet4
   - PE3:
       ip_addr: 10.30.30.103
       neighbors:
@@ -257,7 +307,8 @@ nodes:
         neighborPort: Ethernet2
         port: Ethernet2
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet4
   - PE4:
       ip_addr: 10.30.30.104
       neighbors:
@@ -268,7 +319,9 @@ nodes:
         neighborPort: Ethernet6
         port: Ethernet6
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet1
+      - Ethernet2
   - PE5:
       ip_addr: 10.30.30.105
       neighbors:
@@ -279,7 +332,9 @@ nodes:
         neighborPort: Ethernet6
         port: Ethernet6
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet1
+      - Ethernet2
   - RR1:
       ip_addr: 10.30.30.108
       neighbors:
@@ -388,7 +443,9 @@ nodes:
         neighborPort: Ethernet1
         port: Ethernet6
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet7
+      - Ethernet8
   - SPL2:
       ip_addr: 10.30.30.119
       neighbors:
@@ -411,10 +468,18 @@ nodes:
         neighborPort: Ethernet2
         port: Ethernet6
       node_type: veos
-      ports: []
+      ports:
+      - Ethernet7
+      - Ethernet8
   - cvp:
       ip_addr: 192.168.0.5
       node_type: cvp
   - ansible:
       ip_addr: 192.168.0.6
+      node_type: generic
+  - gitlab:
+      ip_addr: 192.168.0.7
+      node_type: generic
+  - nautobot:
+      ip_addr: 192.168.0.8
       node_type: generic

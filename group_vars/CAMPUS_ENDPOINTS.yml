@@ -1,0 +1,48 @@
+
+---
+port_profiles:
+  A_CLIENT_101:
+    mode: access
+    vlans: 101
+    spanning_tree_portfast: edge
+  A_CLIENT_102:
+    mode: access
+    vlans: 102
+    spanning_tree_portfast: edge
+  B_CLIENT_1101:
+    mode: access
+    vlans: 1101
+    spanning_tree_portfast: edge
+  B_CLIENT_1102:
+    mode: access
+    vlans: 1102
+    spanning_tree_portfast: edge
+
+network_ports:
+  - switches:
+      - L2L1.*
+    switch_ports:
+      - Ethernet5-10
+    description: A_CLIENT_101_Ports
+    profile: A_CLIENT_101
+
+  - switches:
+      - L2L1.*
+    switch_ports:
+      - Ethernet11-15
+    description: A_CLIENT_102_Ports
+    profile: A_CLIENT_102
+
+  - switches:
+      - L2L2.*
+    switch_ports:
+      - Ethernet5-10
+    description: B_CLIENT_1101_Ports
+    profile: B_CLIENT_1101
+
+  - switches:
+      - L2L2.*
+    switch_ports:
+      - Ethernet11-15
+    description: B_CLIENT_1102_Ports
+    profile: B_CLIENT_1102

@@ -1,12 +1,12 @@
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.0.1
+  gateway: 10.30.30.1
 service_routing_protocols_model: multi-agent
 ip_routing: true
 daemon_terminattr:
   cvaddrs:
-  - 192.168.0.5:9910
+  - 10.30.30.5:9910
   cvauth:
     method: key
     key: dogeface
@@ -32,14 +32,14 @@ spanning_tree:
       priority: 4096
   no_spanning_tree_vlan: 4093-4094
 local_users:
+  arista:
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$ZGX/X07MoiWP9hvX$3UaAtOAiBGc54DYHdQt5dsr5P2HLydxjrda51Zw69tSsF4tahXPVj26PwOiZUy/xFRZL3CAkT7.lsOPqWfIbU0
   cvpadmin:
     privilege: 15
     role: network-admin
-    sha512_password: someshapassword
-  someuser:
-    privilege: 15
-    role: network-admin
-    sha512_password: someshapassword
+    sha512_password: $6$uc5r0cSS4vAIiENH$t.pgFDFmLcFZIAxtz0cEVRk2O.Mf3mag1mD5bnFS7pMEdZFnP7VObCJsx8w9opQmlmTpS5uW9J2fJdAA6Dkp8/
 vrfs:
   MGMT:
     ip_routing: false
@@ -55,7 +55,7 @@ management_interfaces:
     shutdown: false
     vrf: MGMT
     ip_address: 10.30.30.118/24
-    gateway: 192.168.0.1
+    gateway: 10.30.30.1
     type: oob
 management_api_http:
   enable_vrfs:
@@ -265,7 +265,7 @@ ethernet_interfaces:
     vrf: A_VRF01
     ospf_area: 0
     ospf_network_point_to_point: false
-  Ethernet5.11:
+  Ethernet7.11:
     peer_type: l3_interface
     ip_address: 192.168.14.1/31
     shutdown: false
@@ -274,7 +274,7 @@ ethernet_interfaces:
     vrf: B_VRF01
     ospf_area: 0
     ospf_network_point_to_point: false
-  Ethernet6.11:
+  Ethernet8.11:
     peer_type: l3_interface
     ip_address: 192.168.14.7/31
     shutdown: false
@@ -283,6 +283,14 @@ ethernet_interfaces:
     vrf: B_VRF01
     ospf_area: 0
     ospf_network_point_to_point: false
+  Ethernet7:
+    type: routed
+    peer_type: l3_interface
+    shutdown: false
+  Ethernet8:
+    type: routed
+    peer_type: l3_interface
+    shutdown: false
 mlag_configuration:
   domain_id: SPLINE
   local_interface: Vlan4094
@@ -313,7 +321,7 @@ router_ospf:
       passive_interface_default: true
       router_id: 192.168.0.1
       no_passive_interfaces:
-      - Ethernet5.11
-      - Ethernet6.11
+      - Ethernet7.11
+      - Ethernet8.11
       redistribute:
         bgp: {}

@@ -8,3 +8,6 @@ wan:
 
 campus:
 	ansible-playbook PLAY_campus_deploy.yml --skip-tags documentation
+
+act:
+	ansible-playbook PLAY_act_topology_generator.yml

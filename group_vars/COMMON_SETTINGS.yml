@@ -1,23 +1,23 @@
 ---
 # Local users
 local_users:
-  someuser:
+  arista:
     privilege: 15
     role: network-admin
-    sha512_password: "someshapassword"
+    sha512_password: "$6$ZGX/X07MoiWP9hvX$3UaAtOAiBGc54DYHdQt5dsr5P2HLydxjrda51Zw69tSsF4tahXPVj26PwOiZUy/xFRZL3CAkT7.lsOPqWfIbU0"
 
   cvpadmin:
     privilege: 15
     role: network-admin
-    sha512_password: "someshapassword"
+    sha512_password: "$6$uc5r0cSS4vAIiENH$t.pgFDFmLcFZIAxtz0cEVRk2O.Mf3mag1mD5bnFS7pMEdZFnP7VObCJsx8w9opQmlmTpS5uW9J2fJdAA6Dkp8/"
 
 # Cloud Vision server information
-cvp_instance_ip: 192.168.0.5
+cvp_instance_ip: 10.30.30.5
 # This ingest key is set at CVP install time.
 cvp_ingestauth_key: dogeface
 
 # OOB Management network default gateway.
-mgmt_gateway: 192.168.0.1
+mgmt_gateway: 10.30.30.1
 
 # dns servers.
 name_servers:
