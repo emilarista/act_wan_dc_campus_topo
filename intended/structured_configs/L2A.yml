@@ -1,6 +1,6 @@
 router_bgp:
-  as: '65104'
-  router_id: 100.64.0.15
+  as: '65102'
+  router_id: 100.64.0.13
   bgp_defaults:
   - no bgp default ipv4-unicast
   - distance bgp 20 200 200
@@ -10,7 +10,7 @@ router_bgp:
   peer_groups:
     MLAG-IPv4-UNDERLAY-PEER:
       type: ipv4
-      remote_as: '65104'
+      remote_as: '65102'
       next_hop_self: true
       description: L2B
       maximum_routes: 12000
@@ -36,17 +36,17 @@ router_bgp:
       EVPN-OVERLAY-PEERS:
         activate: false
   neighbors:
-    100.64.3.9:
+    100.64.3.5:
       peer_group: MLAG-IPv4-UNDERLAY-PEER
       description: L2B
-    100.64.2.24:
+    100.64.2.12:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65101'
-      description: S1_Ethernet5
-    100.64.2.26:
+      description: S1_Ethernet3
+    100.64.2.14:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65101'
-      description: S2_Ethernet5
+      description: S2_Ethernet3
     100.64.0.1:
       peer_group: EVPN-OVERLAY-PEERS
       description: S1
@@ -63,9 +63,24 @@ router_bgp:
       EVPN-OVERLAY-PEERS:
         activate: true
   vrfs:
+    A_VRF01:
+      router_id: 100.64.0.13
+      rd: 100.64.0.13:1
+      route_targets:
+        import:
+          evpn:
+          - '1:1'
+        export:
+          evpn:
+          - '1:1'
+      redistribute_routes:
+      - connected
+      neighbors:
+        100.64.3.5:
+          peer_group: MLAG-IPv4-UNDERLAY-PEER
     B_VRF01:
-      router_id: 100.64.0.15
-      rd: 100.64.0.15:101
+      router_id: 100.64.0.13
+      rd: 100.64.0.13:101
       route_targets:
         import:
           evpn:
@@ -76,12 +91,12 @@ router_bgp:
       redistribute_routes:
       - connected
       neighbors:
-        100.64.3.9:
+        100.64.3.5:
           peer_group: MLAG-IPv4-UNDERLAY-PEER
   vlans:
     10:
       tenant: TENANT_B
-      rd: 100.64.0.15:20010
+      rd: 100.64.0.13:20010
       route_targets:
         both:
         - 20010:20010
@@ -89,21 +104,61 @@ router_bgp:
       - learned
     11:
       tenant: TENANT_B
-      rd: 100.64.0.15:20011
+      rd: 100.64.0.13:20011
       route_targets:
         both:
         - 20011:20011
       redistribute_routes:
       - learned
+    101:
+      tenant: TENANT_A
+      rd: 100.64.0.13:10101
+      route_targets:
+        both:
+        - 10101:10101
+      redistribute_routes:
+      - learned
+    102:
+      tenant: TENANT_A
+      rd: 100.64.0.13:10102
+      route_targets:
+        both:
+        - 10102:10102
+      redistribute_routes:
+      - learned
+    1101:
+      tenant: TENANT_B
+      rd: 100.64.0.13:21101
+      route_targets:
+        both:
+        - 21101:21101
+      redistribute_routes:
+      - learned
+    1102:
+      tenant: TENANT_B
+      rd: 100.64.0.13:21102
+      route_targets:
+        both:
+        - 21102:21102
+      redistribute_routes:
+      - learned
+    1123:
+      tenant: TENANT_C
+      rd: 100.64.0.13:31123
+      route_targets:
+        both:
+        - 31123:31123
+      redistribute_routes:
+      - learned
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.0.1
+  gateway: 10.30.30.1
 service_routing_protocols_model: multi-agent
 ip_routing: true
 daemon_terminattr:
   cvaddrs:
-  - 192.168.0.5:9910
+  - 10.30.30.5:9910
   cvauth:
     method: key
     key: dogeface
@@ -129,17 +184,20 @@ spanning_tree:
       priority: 4096
   no_spanning_tree_vlan: 4093-4094
 local_users:
+  arista:
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$ZGX/X07MoiWP9hvX$3UaAtOAiBGc54DYHdQt5dsr5P2HLydxjrda51Zw69tSsF4tahXPVj26PwOiZUy/xFRZL3CAkT7.lsOPqWfIbU0
   cvpadmin:
     privilege: 15
     role: network-admin
-    sha512_password: someshapassword
-  someuser:
-    privilege: 15
-    role: network-admin
-    sha512_password: someshapassword
+    sha512_password: $6$uc5r0cSS4vAIiENH$t.pgFDFmLcFZIAxtz0cEVRk2O.Mf3mag1mD5bnFS7pMEdZFnP7VObCJsx8w9opQmlmTpS5uW9J2fJdAA6Dkp8/
 vrfs:
   MGMT:
     ip_routing: false
+  A_VRF01:
+    tenant: TENANT_A
+    ip_routing: true
   B_VRF01:
     tenant: TENANT_B
     ip_routing: true
@@ -149,11 +207,12 @@ management_interfaces:
     shutdown: false
     vrf: MGMT
     ip_address: 10.30.30.112/24
-    gateway: 192.168.0.1
+    gateway: 10.30.30.1
     type: oob
 management_api_http:
   enable_vrfs:
-    MGMT: {}
+    MGMT: null
+    default: null
   enable_https: true
 vlans:
   4093:
@@ -172,21 +231,41 @@ vlans:
   11:
     tenant: TENANT_B
     name: B_DC_11
+  101:
+    tenant: TENANT_A
+    name: A_CAMPUS_101
+  102:
+    tenant: TENANT_A
+    name: A_CAMPUS_102
+  3000:
+    tenant: TENANT_A
+    name: MLAG_iBGP_A_VRF01
+    trunk_groups:
+    - LEAF_PEER_L3
+  1101:
+    tenant: TENANT_B
+    name: B_CAMPUS_1101
+  1102:
+    tenant: TENANT_B
+    name: B_CAMPUS_1102
   3100:
     tenant: TENANT_B
     name: MLAG_iBGP_B_VRF01
     trunk_groups:
     - LEAF_PEER_L3
+  1123:
+    tenant: TENANT_C
+    name: C_1123
 vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
     shutdown: false
     mtu: 9000
-    ip_address: 100.64.3.8/31
+    ip_address: 100.64.3.4/31
   Vlan4094:
     description: MLAG_PEER
     shutdown: false
-    ip_address: 100.64.4.8/31
+    ip_address: 100.64.4.4/31
     no_autostate: true
     mtu: 9000
   Vlan10:
@@ -205,6 +284,42 @@ vlan_interfaces:
     shutdown: false
     ip_address_virtual: 10.0.11.1/24
     vrf: B_VRF01
+  Vlan101:
+    tenant: TENANT_A
+    tags:
+    - campus
+    description: A_CAMPUS_101
+    shutdown: false
+    vrf: A_VRF01
+  Vlan102:
+    tenant: TENANT_A
+    tags:
+    - campus
+    description: A_CAMPUS_102
+    shutdown: false
+    vrf: A_VRF01
+  Vlan3000:
+    tenant: TENANT_A
+    type: underlay_peering
+    shutdown: false
+    description: 'MLAG_PEER_L3_iBGP: vrf A_VRF01'
+    vrf: A_VRF01
+    mtu: 9000
+    ip_address: 100.64.3.4/31
+  Vlan1101:
+    tenant: TENANT_B
+    tags:
+    - campus
+    description: B_CAMPUS_1101
+    shutdown: false
+    vrf: B_VRF01
+  Vlan1102:
+    tenant: TENANT_B
+    tags:
+    - campus
+    description: B_CAMPUS_1102
+    shutdown: false
+    vrf: B_VRF01
   Vlan3100:
     tenant: TENANT_B
     type: underlay_peering
@@ -212,7 +327,7 @@ vlan_interfaces:
     description: 'MLAG_PEER_L3_iBGP: vrf B_VRF01'
     vrf: B_VRF01
     mtu: 9000
-    ip_address: 100.64.3.8/31
+    ip_address: 100.64.3.4/31
 port_channel_interfaces:
   Port-Channel3:
     description: MLAG_PEER_L2B_Po3
@@ -246,33 +361,36 @@ ethernet_interfaces:
       mode: active
   Ethernet1:
     peer: S1
-    peer_interface: Ethernet5
+    peer_interface: Ethernet3
     peer_type: spine
-    description: P2P_LINK_TO_S1_Ethernet5
+    description: P2P_LINK_TO_S1_Ethernet3
     mtu: 9000
     type: routed
     shutdown: false
-    ip_address: 100.64.2.25/31
+    ip_address: 100.64.2.13/31
   Ethernet2:
     peer: S2
-    peer_interface: Ethernet5
+    peer_interface: Ethernet3
     peer_type: spine
-    description: P2P_LINK_TO_S2_Ethernet5
+    description: P2P_LINK_TO_S2_Ethernet3
     mtu: 9000
     type: routed
     shutdown: false
-    ip_address: 100.64.2.27/31
+    ip_address: 100.64.2.15/31
   Ethernet5:
     peer: B_SERVER1
     peer_interface: Ethernet1
-    peer_type: server
+    peer_type: manual_server
     description: B_SERVER1_Ethernet1
     type: switched
     shutdown: false
+    mode: access
+    vlans: 10
+    spanning_tree_portfast: edge
 mlag_configuration:
   domain_id: L2
   local_interface: Vlan4094
-  peer_address: 100.64.4.9
+  peer_address: 100.64.4.5
   peer_link: Port-Channel3
   reload_delay_mlag: 300
   reload_delay_non_mlag: 330
@@ -294,11 +412,11 @@ loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
     shutdown: false
-    ip_address: 100.64.0.15/32
+    ip_address: 100.64.0.13/32
   Loopback1:
     description: VTEP_VXLAN_Tunnel_Source
     shutdown: false
-    ip_address: 100.64.1.15/32
+    ip_address: 100.64.1.13/32
 prefix_lists:
   PL-LOOPBACKS-EVPN-OVERLAY:
     sequence_numbers:
@@ -326,6 +444,18 @@ vxlan_interface:
           vni: 20010
         11:
           vni: 20011
+        101:
+          vni: 10101
+        102:
+          vni: 10102
+        1101:
+          vni: 21101
+        1102:
+          vni: 21102
+        1123:
+          vni: 31123
       vrfs:
+        A_VRF01:
+          vni: 1
         B_VRF01:
           vni: 101

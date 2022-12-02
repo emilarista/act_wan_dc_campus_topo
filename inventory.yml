@@ -33,8 +33,10 @@ all:
         cv_server:
           ansible_httpapi_host: 10.20.20.20
           ansible_host: 10.20.20.20
-          ansible_user: cvpadmin
-          ansible_password: somepassword
+          # ansible_user: cvpadmin
+          ansible_user: cvaas
+          # ansible_password: somepassword
+          ansible_password: service_account_token
           ansible_connection: httpapi
           ansible_httpapi_use_ssl: true
           ansible_httpapi_validate_certs: false
@@ -141,7 +143,17 @@ all:
         DC_L3LEAFS:
         CAMPUS:
 
+    # Nautobot generated tenants
+    DC_TENANTS:
+      children:
+        DC_L3LEAFS:
+
     DC_ENDPOINTS:
+      children:
+        DC_L3LEAFS:
+
+    # Nautobot generated servers
+    DC_SERVERS:
       children:
         DC_L3LEAFS:
 

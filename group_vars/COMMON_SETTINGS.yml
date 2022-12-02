@@ -68,6 +68,16 @@ management_security:
   password:
     encryption_key_common: true
 
+custom_structured_configuration_management_api_http:
+  enable_https: true
+  enable_vrfs:
+    MGMT:
+    default:
+
+network_services_keys:
+  - name: manual_tenants
+  - name: tenants
+
 # Endpoint keys
 connected_endpoints_keys:
   routers:

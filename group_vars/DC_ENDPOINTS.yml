@@ -17,7 +17,7 @@ port_profiles:
     vlans: 11
     spanning_tree_portfast: edge
 
-servers:
+manual_servers:
   A_SERVER1:
     rack: A
     adapters:
@@ -27,6 +27,7 @@ servers:
       - Ethernet5
       switches:
       - L1A
+      profile: A_SERVER_10
   A_SERVER2:
     rack: A
     adapters:
@@ -36,6 +37,7 @@ servers:
       - Ethernet5
       switches:
       - L1B
+      profile: A_SERVER_11
 
   B_SERVER1:
     rack: B
@@ -46,6 +48,7 @@ servers:
       - Ethernet5
       switches:
       - L2A
+      profile: B_SERVER_10
   B_SERVER2:
     rack: B
     adapters:
@@ -55,3 +58,4 @@ servers:
       - Ethernet5
       switches:
       - L2B
+      profile: B_SERVER_11

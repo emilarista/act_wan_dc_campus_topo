@@ -1,4 +1,4 @@
-tenants:
+manual_tenants:
   TENANT_A:
     mac_vrf_id_base: 10000
     mac_vrf_vni_base: 10000

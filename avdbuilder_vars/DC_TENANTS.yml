@@ -1,0 +1,10 @@
+---
+
+tenants:
+  TENANT_C:
+    mac_vrf_vni_base: 30000
+    l2vlans:
+      1123:
+        name: C_1123
+        tags: ['avd']
+    vrfs:

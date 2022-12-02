@@ -472,14 +472,6 @@ nodes:
       - Ethernet7
       - Ethernet8
   - cvp:
-      ip_addr: 192.168.0.5
+      ip_addr: 10.30.30.5
       node_type: cvp
-  - ansible:
-      ip_addr: 192.168.0.6
-      node_type: generic
-  - gitlab:
-      ip_addr: 192.168.0.7
-      node_type: generic
-  - nautobot:
-      ip_addr: 192.168.0.8
-      node_type: generic
+
