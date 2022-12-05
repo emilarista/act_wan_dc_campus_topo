@@ -1,0 +1,47 @@
+---
+CVP_DEVICES:
+  - fqdn: P1
+    parentContainerName: P_ROUTERS
+    configlets:
+      - WAN_AVD_P1
+  - fqdn: P2
+    parentContainerName: P_ROUTERS
+    configlets:
+      - WAN_AVD_P2
+  - fqdn: PE1
+    parentContainerName: PE_ROUTERS
+    configlets:
+      - WAN_AVD_PE1
+  - fqdn: PE2
+    parentContainerName: PE_ROUTERS
+    configlets:
+      - WAN_AVD_PE2
+  - fqdn: PE3
+    parentContainerName: PE_ROUTERS
+    configlets:
+      - WAN_AVD_PE3
+  - fqdn: PE4
+    parentContainerName: PE_ROUTERS
+    configlets:
+      - WAN_AVD_PE4
+  - fqdn: PE5
+    parentContainerName: PE_ROUTERS
+    configlets:
+      - WAN_AVD_PE5
+  - fqdn: RR1
+    parentContainerName: RR_ROUTERS
+    configlets:
+      - WAN_AVD_RR1
+  - fqdn: RR2
+    parentContainerName: RR_ROUTERS
+    configlets:
+      - WAN_AVD_RR2
+CVP_CONTAINERS:
+  P_ROUTERS:
+    parentContainerName: WAN
+  PE_ROUTERS:
+    parentContainerName: WAN
+  RR_ROUTERS:
+    parentContainerName: WAN
+  WAN:
+    parentContainerName: Tenant

@@ -8,14 +8,6 @@ router_bgp:
   - graceful-restart
   - maximum-paths 4 ecmp 4
   peer_groups:
-    MLAG-IPv4-UNDERLAY-PEER:
-      type: ipv4
-      remote_as: '65103'
-      next_hop_self: true
-      description: EL1
-      maximum_routes: 12000
-      send_community: all
-      route_map_in: RM-MLAG-PEER-IN
     IPv4-UNDERLAY-PEERS:
       type: ipv4
       maximum_routes: 12000
@@ -29,16 +21,14 @@ router_bgp:
       maximum_routes: 0
   address_family_ipv4:
     peer_groups:
-      MLAG-IPv4-UNDERLAY-PEER:
-        activate: true
       IPv4-UNDERLAY-PEERS:
         activate: true
       EVPN-OVERLAY-PEERS:
         activate: false
+  redistribute_routes:
+    connected:
+      route_map: RM-CONN-2-BGP
   neighbors:
-    100.64.3.8:
-      peer_group: MLAG-IPv4-UNDERLAY-PEER
-      description: EL1
     100.64.2.30:
       peer_group: IPv4-UNDERLAY-PEERS
       remote_as: '65101'
@@ -55,9 +45,6 @@ router_bgp:
       peer_group: EVPN-OVERLAY-PEERS
       description: S2
       remote_as: '65101'
-  redistribute_routes:
-    connected:
-      route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
       EVPN-OVERLAY-PEERS:
@@ -75,9 +62,6 @@ router_bgp:
           - '1:1'
       redistribute_routes:
       - connected
-      neighbors:
-        100.64.3.8:
-          peer_group: MLAG-IPv4-UNDERLAY-PEER
     B_VRF01:
       router_id: 100.64.0.16
       rd: 100.64.0.16:101
@@ -90,9 +74,6 @@ router_bgp:
           - 101:101
       redistribute_routes:
       - connected
-      neighbors:
-        100.64.3.8:
-          peer_group: MLAG-IPv4-UNDERLAY-PEER
   vlans:
     10:
       tenant: TENANT_B
@@ -160,8 +141,9 @@ daemon_terminattr:
   cvaddrs:
   - 10.30.30.5:9910
   cvauth:
-    method: key
-    key: dogeface
+    method: token
+    key: 1a38fe7df56879d685e51b6f0ff86327
+    token_file: /tmp/token
   cvvrf: MGMT
   smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
   ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
@@ -182,7 +164,6 @@ spanning_tree:
   mst_instances:
     '0':
       priority: 4096
-  no_spanning_tree_vlan: 4093-4094
 local_users:
   arista:
     privilege: 15
@@ -214,151 +195,7 @@ management_api_http:
     MGMT: null
     default: null
   enable_https: true
-vlans:
-  4093:
-    tenant: system
-    name: LEAF_PEER_L3
-    trunk_groups:
-    - LEAF_PEER_L3
-  4094:
-    tenant: system
-    name: MLAG_PEER
-    trunk_groups:
-    - MLAG
-  10:
-    tenant: TENANT_B
-    name: B_DC_10
-  11:
-    tenant: TENANT_B
-    name: B_DC_11
-  101:
-    tenant: TENANT_A
-    name: A_CAMPUS_101
-  102:
-    tenant: TENANT_A
-    name: A_CAMPUS_102
-  3000:
-    tenant: TENANT_A
-    name: MLAG_iBGP_A_VRF01
-    trunk_groups:
-    - LEAF_PEER_L3
-  1101:
-    tenant: TENANT_B
-    name: B_CAMPUS_1101
-  1102:
-    tenant: TENANT_B
-    name: B_CAMPUS_1102
-  3100:
-    tenant: TENANT_B
-    name: MLAG_iBGP_B_VRF01
-    trunk_groups:
-    - LEAF_PEER_L3
-  1123:
-    tenant: TENANT_C
-    name: C_1123
-vlan_interfaces:
-  Vlan4093:
-    description: MLAG_PEER_L3_PEERING
-    shutdown: false
-    mtu: 9000
-    ip_address: 100.64.3.9/31
-  Vlan4094:
-    description: MLAG_PEER
-    shutdown: false
-    ip_address: 100.64.4.9/31
-    no_autostate: true
-    mtu: 9000
-  Vlan10:
-    tenant: TENANT_B
-    tags:
-    - dc
-    description: B_DC_10
-    shutdown: false
-    ip_address_virtual: 10.0.10.1/24
-    vrf: B_VRF01
-  Vlan11:
-    tenant: TENANT_B
-    tags:
-    - dc
-    description: B_DC_11
-    shutdown: false
-    ip_address_virtual: 10.0.11.1/24
-    vrf: B_VRF01
-  Vlan101:
-    tenant: TENANT_A
-    tags:
-    - campus
-    description: A_CAMPUS_101
-    shutdown: false
-    vrf: A_VRF01
-  Vlan102:
-    tenant: TENANT_A
-    tags:
-    - campus
-    description: A_CAMPUS_102
-    shutdown: false
-    vrf: A_VRF01
-  Vlan3000:
-    tenant: TENANT_A
-    type: underlay_peering
-    shutdown: false
-    description: 'MLAG_PEER_L3_iBGP: vrf A_VRF01'
-    vrf: A_VRF01
-    mtu: 9000
-    ip_address: 100.64.3.9/31
-  Vlan1101:
-    tenant: TENANT_B
-    tags:
-    - campus
-    description: B_CAMPUS_1101
-    shutdown: false
-    vrf: B_VRF01
-  Vlan1102:
-    tenant: TENANT_B
-    tags:
-    - campus
-    description: B_CAMPUS_1102
-    shutdown: false
-    vrf: B_VRF01
-  Vlan3100:
-    tenant: TENANT_B
-    type: underlay_peering
-    shutdown: false
-    description: 'MLAG_PEER_L3_iBGP: vrf B_VRF01'
-    vrf: B_VRF01
-    mtu: 9000
-    ip_address: 100.64.3.9/31
-port_channel_interfaces:
-  Port-Channel3:
-    description: MLAG_PEER_EL1_Po3
-    type: switched
-    shutdown: false
-    vlans: 2-4094
-    mode: trunk
-    trunk_groups:
-    - LEAF_PEER_L3
-    - MLAG
 ethernet_interfaces:
-  Ethernet3:
-    peer: EL1
-    peer_interface: Ethernet3
-    peer_type: mlag_peer
-    description: MLAG_PEER_EL1_Ethernet3
-    type: switched
-    shutdown: false
-    channel_group:
-      id: 3
-      mode: active
-  Ethernet4:
-    peer: EL1
-    peer_interface: Ethernet4
-    peer_type: mlag_peer
-    description: MLAG_PEER_EL1_Ethernet4
-    type: switched
-    shutdown: false
-    channel_group:
-      id: 3
-      mode: active
   Ethernet1:
     peer: S1
     peer_interface: Ethernet6
@@ -429,27 +266,6 @@ ethernet_interfaces:
 
       '
     ip_address: 100.64.100.21/31
-mlag_configuration:
-  domain_id: EL
-  local_interface: Vlan4094
-  peer_address: 100.64.4.8
-  peer_link: Port-Channel3
-  reload_delay_mlag: 300
-  reload_delay_non_mlag: 330
-route_maps:
-  RM-MLAG-PEER-IN:
-    sequence_numbers:
-      10:
-        type: permit
-        set:
-        - origin incomplete
-        description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
-  RM-CONN-2-BGP:
-    sequence_numbers:
-      10:
-        type: permit
-        match:
-        - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
 loopback_interfaces:
   Loopback0:
     description: EVPN_Overlay_Peering
@@ -458,7 +274,7 @@ loopback_interfaces:
   Loopback1:
     description: VTEP_VXLAN_Tunnel_Source
     shutdown: false
-    ip_address: 100.64.1.15/32
+    ip_address: 100.64.1.16/32
 prefix_lists:
   PL-LOOPBACKS-EVPN-OVERLAY:
     sequence_numbers:
@@ -466,21 +282,95 @@ prefix_lists:
         action: permit 100.64.0.0/24 eq 32
       20:
         action: permit 100.64.1.0/24 eq 32
+route_maps:
+  RM-CONN-2-BGP:
+    sequence_numbers:
+      10:
+        type: permit
+        match:
+        - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
 router_bfd:
   multihop:
     interval: 10000
     min_rx: 10000
     multiplier: 3
+vlans:
+  10:
+    tenant: TENANT_B
+    name: B_DC_10
+  11:
+    tenant: TENANT_B
+    name: B_DC_11
+  101:
+    tenant: TENANT_A
+    name: A_CAMPUS_101
+  102:
+    tenant: TENANT_A
+    name: A_CAMPUS_102
+  1101:
+    tenant: TENANT_B
+    name: B_CAMPUS_1101
+  1102:
+    tenant: TENANT_B
+    name: B_CAMPUS_1102
+  1123:
+    tenant: TENANT_C
+    name: C_1123
 ip_igmp_snooping:
   globally_enabled: true
 ip_virtual_router_mac_address: 00:1c:73:00:dc:00
+vlan_interfaces:
+  Vlan10:
+    tenant: TENANT_B
+    tags:
+    - dc
+    description: B_DC_10
+    shutdown: false
+    ip_address_virtual: 10.0.10.1/24
+    vrf: B_VRF01
+  Vlan11:
+    tenant: TENANT_B
+    tags:
+    - dc
+    description: B_DC_11
+    shutdown: false
+    ip_address_virtual: 10.0.11.1/24
+    vrf: B_VRF01
+  Vlan101:
+    tenant: TENANT_A
+    tags:
+    - campus
+    description: A_CAMPUS_101
+    shutdown: false
+    vrf: A_VRF01
+  Vlan102:
+    tenant: TENANT_A
+    tags:
+    - campus
+    description: A_CAMPUS_102
+    shutdown: false
+    vrf: A_VRF01
+  Vlan1101:
+    tenant: TENANT_B
+    tags:
+    - campus
+    description: B_CAMPUS_1101
+    shutdown: false
+    vrf: B_VRF01
+  Vlan1102:
+    tenant: TENANT_B
+    tags:
+    - campus
+    description: B_CAMPUS_1102
+    shutdown: false
+    vrf: B_VRF01
+eos_cli: agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP='true'
 vxlan_interface:
   Vxlan1:
     description: EL2_VTEP
     vxlan:
       udp_port: 4789
       source_interface: Loopback1
-      virtual_router_encapsulation_mac_address: mlag-system-id
       vlans:
         10:
           vni: 20010

@@ -31,12 +31,12 @@ all:
     CVP:
       hosts:
         cv_server:
-          ansible_httpapi_host: 10.20.20.20
-          ansible_host: 10.20.20.20
+          ansible_httpapi_host: 10.255.57.119
+          ansible_host: 10.255.57.119
           # ansible_user: cvpadmin
           ansible_user: cvaas
           # ansible_password: somepassword
-          ansible_password: service_account_token
+          ansible_password: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJkaWQiOjcxNzI1MjM3ODcyMTUxNzU4MzgsImRzbiI6ImFuc2libGUiLCJkc3QiOiJhY2NvdW50IiwiZXhwIjoxNjcyNTg1NzcxLCJpYXQiOjE2Njk5OTM3ODIsInNpZCI6ImE3NjExMmY3ZDcyM2MxYmU4MDNiNGJmYTg3MjQ2MzBiOWI5ODAzNjE1NGM5ZTcxZWZhNDMxZmNjZGRmYzVjZDItd3FCUTk1NjU1RXh3TUR6d1F1ZEdzSExZRnVvS0dzcnprdlFYNTlGbSJ9.WfpZk3V2pf79aT5imzplAAvCG9RtPrP9EbFYuZJjdqYBjYOblXyCdaT5xU6Z5H3hgTADYYLRU1peeXFUeo-cuk0hCo0naHSq21eCA4YVY5KPMaSAoLV-NdaDXid1qst4kg3pQ25A8-7CmPSSPsJQ27xWX7gdFcCHwB7a9rOIWxdCyL_YvRUEogHRsUDiUwkgiUloI48XhlYaDefEEbtH0MimxMbPwDo-85S6g5RZcx-L19zTcZoDulND8QE8sXI-TizQTvbi_Z_lD-vhE4vfd9NbC99fa9Dz8lz1WQXE2uhP_X5dIoVSUQiE6HAwzD8TiWZ_BHkw79KDQI1HbL8da3f-prqkcRi_kxQqh2yUhBZFZvhQZS-_dYPvE37yh8eyQ87BYwWBYCnNKXWu4GE9BnA5RwuzheRnUVkIsgbwt_oOHo_XTgodwPlG2tJoEpkseNM2P5peaxuVxrPxCF2Sk9s1KPNjdGPCwS_hj8lWpOyYAGfJqZ0BOalKLUgcEVXfLj2W7XvY6XUeBbnFv5bZjiUVl22kV0qE0PlSrsxVkxCxzGxVAJWZqNuwYjdnIufsefvT2Ma77Gc6UAUTn2T7YmfvbButlu50kEq3aU8UDahg1NSRL5AvPX2IMf06KIoTTIvxxEAI6NeP8pW_2HPrX66oSBcnRw4KiWC2_G4EV14"
           ansible_connection: httpapi
           ansible_httpapi_use_ssl: true
           ansible_httpapi_validate_certs: false
@@ -53,31 +53,31 @@ all:
             type: pe
           hosts:
             PE1:
-              ansible_host: 10.30.30.101
+              ansible_host: 10.255.23.128
             PE2:
-              ansible_host: 10.30.30.102
+              ansible_host: 10.255.23.198
             PE3:
-              ansible_host: 10.30.30.103
+              ansible_host: 10.255.98.33
             PE4:
-              ansible_host: 10.30.30.104
+              ansible_host: 10.255.19.41
             PE5:
-              ansible_host: 10.30.30.105
+              ansible_host: 10.255.53.184
         P_ROUTERS:
           vars:
             type: p
           hosts:
             P1:
-              ansible_host: 10.30.30.106
+              ansible_host: 10.255.18.139
             P2:
-              ansible_host: 10.30.30.107
+              ansible_host: 10.255.114.199
         RR_ROUTERS:
           vars:
             type: rr
           hosts:
             RR1:
-              ansible_host: 10.30.30.108
+              ansible_host: 10.255.52.144
             RR2:
-              ansible_host: 10.30.30.109
+              ansible_host: 10.255.113.168
 
     # DC Fabric
     DC:

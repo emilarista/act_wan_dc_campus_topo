@@ -160,8 +160,9 @@ daemon_terminattr:
   cvaddrs:
   - 10.30.30.5:9910
   cvauth:
-    method: key
-    key: dogeface
+    method: token
+    key: 1a38fe7df56879d685e51b6f0ff86327
+    token_file: /tmp/token
   cvvrf: MGMT
   smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
   ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
@@ -432,6 +433,7 @@ router_bfd:
 ip_igmp_snooping:
   globally_enabled: true
 ip_virtual_router_mac_address: 00:1c:73:00:dc:00
+eos_cli: agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP='true'
 vxlan_interface:
   Vxlan1:
     description: L1B_VTEP

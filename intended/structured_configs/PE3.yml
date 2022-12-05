@@ -19,6 +19,13 @@ router_bgp:
     peer_groups:
       MPLS-OVERLAY-PEERS:
         activate: false
+  address_family_evpn:
+    neighbor_default:
+      encapsulation: mpls
+      next_hop_self_source_interface: Loopback0
+    peer_groups:
+      MPLS-OVERLAY-PEERS:
+        activate: true
   address_family_vpn_ipv4:
     neighbor_default_encapsulation_mpls_next_hop_self:
       source_interface: Loopback0
@@ -40,8 +47,12 @@ router_bgp:
         import:
           vpn-ipv4:
           - '65000:1'
+          evpn:
+          - '65000:1'
         export:
           vpn-ipv4:
+          - '65000:1'
+          evpn:
           - '65000:1'
       redistribute_routes:
       - connected
@@ -50,29 +61,19 @@ router_bgp:
       rd: 100.70.2.3:101
       route_targets:
         import:
-          vpn-ipv4:
+          evpn:
           - 65000:101
         export:
-          vpn-ipv4:
+          evpn:
           - 65000:101
       redistribute_routes:
       - connected
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
-  gateway: 192.168.0.1
+  gateway: 10.30.30.1
 service_routing_protocols_model: multi-agent
 ip_routing: true
-daemon_terminattr:
-  cvaddrs:
-  - 192.168.0.5:9910
-  cvauth:
-    method: key
-    key: dogeface
-  cvvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
-  disable_aaa: false
 vlan_internal_order:
   allocation: ascending
   range:
@@ -91,14 +92,14 @@ spanning_tree:
     '0':
       priority: 4096
 local_users:
+  arista:
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$ZGX/X07MoiWP9hvX$3UaAtOAiBGc54DYHdQt5dsr5P2HLydxjrda51Zw69tSsF4tahXPVj26PwOiZUy/xFRZL3CAkT7.lsOPqWfIbU0
   cvpadmin:
     privilege: 15
     role: network-admin
-    sha512_password: someshapassword
-  someuser:
-    privilege: 15
-    role: network-admin
-    sha512_password: someshapassword
+    sha512_password: $6$uc5r0cSS4vAIiENH$t.pgFDFmLcFZIAxtz0cEVRk2O.Mf3mag1mD5bnFS7pMEdZFnP7VObCJsx8w9opQmlmTpS5uW9J2fJdAA6Dkp8/
 vrfs:
   MGMT:
     ip_routing: false
@@ -114,11 +115,12 @@ management_interfaces:
     shutdown: false
     vrf: MGMT
     ip_address: 10.30.30.103/24
-    gateway: 192.168.0.1
+    gateway: 10.30.30.1
     type: oob
 management_api_http:
   enable_vrfs:
-    MGMT: {}
+    MGMT: null
+    default: null
   enable_https: true
 loopback_interfaces:
   Loopback0:
@@ -203,3 +205,13 @@ router_bfd:
 ip_igmp_snooping:
   globally_enabled: true
 ip_virtual_router_mac_address: 00:1c:73:00:dc:00
+eos_cli: 'agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP=''true''
+
+  '
+daemon_terminattr:
+  cvaddrs:
+  - 10.30.30.5:9910
+  cvvrf: MGMT
+  cvauth:
+    method: token
+    token_file: /tmp/token

@@ -77,6 +77,7 @@ pe:
       - 'graceful-restart restart-time 300'
       - 'graceful-restart'
     mpls_route_reflectors: [ RR1, RR2 ]
+    overlay_address_families: [ evpn, vpn-ipv4 ]
   node_groups:
     PE1-2:
       filter:
@@ -116,6 +117,7 @@ rr:
     is_type: level-2
     node_sid_base: 100
     isis_system_id_prefix: '0000.0001'
+    overlay_address_families: [ evpn, vpn-ipv4 ]
     bgp_defaults:
       - 'no bgp default ipv4-unicast'
       - 'distance bgp 20 200 200'
@@ -125,6 +127,7 @@ rr:
   node_groups:
     RR1-2:
       bgp_cluster_id: 1.2.1.2
+      mpls_route_reflectors: [ RR1, RR2 ]
       # evpn_gw:
       nodes:
         RR1:

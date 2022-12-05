@@ -62,10 +62,17 @@ manual_tenants:
             ip_addresses: [ 172.16.12.0/31 ]
             nodes: [ PE3 ]
           # WAN site3 (campus) PE interfaces
-          - interfaces: [ Ethernet1.10, Ethernet2.10, Ethernet1.10, Ethernet2.10 ]
+          # - interfaces: [ Ethernet1.10, Ethernet2.10, Ethernet1.10, Ethernet2.10 ]
+          #   enabled: true
+          #   ip_addresses: [ 192.168.13.0/31, 192.168.13.2/31, 192.168.13.4/31, 192.168.13.6/31 ]
+          #   nodes: [ PE4, PE4, PE5, PE5 ]
+          #   ospf:
+          #     enabled: true
+          # Amended due to ACT stuff
+          - interfaces: [ Ethernet2.10, Ethernet2.10 ]
             enabled: true
-            ip_addresses: [ 192.168.13.0/31, 192.168.13.2/31, 192.168.13.4/31, 192.168.13.6/31 ]
-            nodes: [ PE4, PE4, PE5, PE5 ]
+            ip_addresses: [ 192.168.13.2/31, 192.168.13.6/31 ]
+            nodes: [ PE4, PE5 ]
             ospf:
               enabled: true
           # WAN site3 (campus) SPL interfaces
@@ -85,11 +92,33 @@ manual_tenants:
   TENANT_B:
     mac_vrf_id_base: 20000
     mac_vrf_vni_base: 20000
+    pseudowire_rt_base: 3000
+    # point_to_point_services:
+    #   - name: B_VPWS_SERVICE
+    #     type: vpws-pseudowire
+    #     # Subinterfaces will create subinterfaces and additional pseudowires/patch panel config
+    #     subinterfaces:
+    #       - number: 3000
+    #       - number: 3001
+    #       - number: 3002
+    #     # Pseudowire terminating endpoints.
+    #     endpoints:
+    #       - id: 12
+    #         # With ESI multihoming we support 2 nodes per pseudowire endpoint
+    #         nodes: [ PE1, PE2 ]
+    #         # Interfaces patched to the pseudowire on side A
+    #         interfaces: [ Ethernet3, Ethernet4 ]
+    #         port_channel:
+    #           mode: active
+    #           short_esi: 0303:0202:0101
+    #       - id: 3
+    #         nodes: [ PE3 ]
+    #         # Interfaces patched to the pseudowire on side B
+    #         interfaces: [ Ethernet4 ]
     vrfs:
       B_VRF01:
         vrf_id: 101
         address_families:
-          - vpn-ipv4
           - evpn
         svis:
           10:
@@ -145,10 +174,17 @@ manual_tenants:
             ip_addresses: [ 172.16.12.2/31 ]
             nodes: [ PE3 ]
           # WAN site3 (campus) PE interfaces
-          - interfaces: [ Ethernet1.11, Ethernet2.11, Ethernet1.11, Ethernet2.11 ]
+          # - interfaces: [ Ethernet1.11, Ethernet2.11, Ethernet1.11, Ethernet2.11 ]
+          #   enabled: true
+          #   ip_addresses: [ 192.168.14.0/31, 192.168.14.2/31, 192.168.14.4/31, 192.168.14.6/31 ]
+          #   nodes: [ PE4, PE4, PE5, PE5 ]
+          #   ospf:
+          #     enabled: true
+          # Amended due to ACT stuff
+          - interfaces: [ Ethernet2.11, Ethernet2.11 ]
             enabled: true
-            ip_addresses: [ 192.168.14.0/31, 192.168.14.2/31, 192.168.14.4/31, 192.168.14.6/31 ]
-            nodes: [ PE4, PE4, PE5, PE5 ]
+            ip_addresses: [ 192.168.14.2/31, 192.168.14.6/31 ]
+            nodes: [ PE4, PE5 ]
             ospf:
               enabled: true
           # WAN site3 (campus) SPL interfaces

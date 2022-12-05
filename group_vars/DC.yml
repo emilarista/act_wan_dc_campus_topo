@@ -58,6 +58,7 @@ l3leaf:
       bgp_as: 65103
       evpn_role: client
       evpn_route_servers: ['S1', 'S2']
+      mlag: false
       nodes:
         EL1:
           id: 5

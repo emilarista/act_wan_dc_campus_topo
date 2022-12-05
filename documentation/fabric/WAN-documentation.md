@@ -18,15 +18,15 @@
 
 | POD | Type | Node | Management IP | Platform | Provisioned in CloudVision |
 | --- | ---- | ---- | ------------- | -------- | -------------------------- |
-| WAN | p | P1 | 10.30.30.104/24 | - | Provisioned |
-| WAN | p | P2 | 10.30.30.106/24 | - | Provisioned |
+| WAN | p | P1 | 10.30.30.106/24 | - | Provisioned |
+| WAN | p | P2 | 10.30.30.107/24 | - | Provisioned |
 | WAN | pe | PE1 | 10.30.30.101/24 | vEOS-LAB | Provisioned |
 | WAN | pe | PE2 | 10.30.30.102/24 | vEOS-LAB | Provisioned |
 | WAN | pe | PE3 | 10.30.30.103/24 | vEOS-LAB | Provisioned |
-| WAN | pe | PE4 | 10.30.30.105/24 | vEOS-LAB | Provisioned |
+| WAN | pe | PE4 | 10.30.30.104/24 | vEOS-LAB | Provisioned |
 | WAN | pe | PE5 | 10.30.30.105/24 | vEOS-LAB | Provisioned |
-| WAN | rr | RR1 | 10.30.30.107/24 | vEOS-LAB | Provisioned |
-| WAN | rr | RR2 | 10.30.30.108/24 | vEOS-LAB | Provisioned |
+| WAN | rr | RR1 | 10.30.30.108/24 | vEOS-LAB | Provisioned |
+| WAN | rr | RR2 | 10.30.30.109/24 | vEOS-LAB | Provisioned |
 
 > Provision status is based on Ansible inventory declaration and do not represent real status from CloudVision.
 
@@ -47,10 +47,10 @@
 | p | P2 | Ethernet5 | pe | PE4 | Ethernet5 |
 | pe | PE1 | Ethernet2 | rr | RR1 | Ethernet2 |
 | pe | PE2 | Ethernet1 | rr | RR1 | Ethernet1 |
-| pe | PE3 | Ethernet2 | rr | RR2 | Ethernet2 |
 | pe | PE4 | Ethernet6 | pe | PE5 | Ethernet6 |
 | pe | PE5 | Ethernet5 | rr | RR2 | Ethernet5 |
 | rr | RR1 | Ethernet3 | rr | RR2 | Ethernet3 |
+| rr | RR2 | Ethernet2 | pe | PE3 | Ethernet2 |
 
 # Fabric IP Allocation
 
@@ -72,10 +72,10 @@
 | P2 | Ethernet5 | 100.70.100.22/31 | PE4 | Ethernet5 | 100.70.100.23/31 |
 | PE1 | Ethernet2 | 100.70.100.12/31 | RR1 | Ethernet2 | 100.70.100.13/31 |
 | PE2 | Ethernet1 | 100.70.100.14/31 | RR1 | Ethernet1 | 100.70.100.15/31 |
-| PE3 | Ethernet2 | 100.70.100.31/31 | RR2 | Ethernet2 | 100.70.100.30/31 |
 | PE4 | Ethernet6 | 100.70.100.32/31 | PE5 | Ethernet6 | 100.70.100.33/31 |
 | PE5 | Ethernet5 | 100.70.100.29/31 | RR2 | Ethernet5 | 100.70.100.28/31 |
 | RR1 | Ethernet3 | 100.70.100.16/31 | RR2 | Ethernet3 | 100.70.100.17/31 |
+| RR2 | Ethernet2 | 100.70.100.30/31 | PE3 | Ethernet2 | 172.16.12.0/31 |
 
 ## Loopback Interfaces (BGP EVPN Peering)
 
