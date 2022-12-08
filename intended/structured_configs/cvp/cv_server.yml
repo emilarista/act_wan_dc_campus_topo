@@ -1,47 +1,41 @@
 ---
 CVP_DEVICES:
-  - fqdn: P1
-    parentContainerName: P_ROUTERS
+  - fqdn: EL1
+    parentContainerName: DC_L3LEAFS
     configlets:
-      - WAN_AVD_P1
-  - fqdn: P2
-    parentContainerName: P_ROUTERS
+      - DC_AVD_EL1
+  - fqdn: EL2
+    parentContainerName: DC_L3LEAFS
     configlets:
-      - WAN_AVD_P2
-  - fqdn: PE1
-    parentContainerName: PE_ROUTERS
+      - DC_AVD_EL2
+  - fqdn: L1A
+    parentContainerName: DC_L3LEAFS
     configlets:
-      - WAN_AVD_PE1
-  - fqdn: PE2
-    parentContainerName: PE_ROUTERS
+      - DC_AVD_L1A
+  - fqdn: L1B
+    parentContainerName: DC_L3LEAFS
     configlets:
-      - WAN_AVD_PE2
-  - fqdn: PE3
-    parentContainerName: PE_ROUTERS
+      - DC_AVD_L1B
+  - fqdn: L2A
+    parentContainerName: DC_L3LEAFS
     configlets:
-      - WAN_AVD_PE3
-  - fqdn: PE4
-    parentContainerName: PE_ROUTERS
+      - DC_AVD_L2A
+  - fqdn: L2B
+    parentContainerName: DC_L3LEAFS
     configlets:
-      - WAN_AVD_PE4
-  - fqdn: PE5
-    parentContainerName: PE_ROUTERS
+      - DC_AVD_L2B
+  - fqdn: S1
+    parentContainerName: DC_SPINES
     configlets:
-      - WAN_AVD_PE5
-  - fqdn: RR1
-    parentContainerName: RR_ROUTERS
+      - DC_AVD_S1
+  - fqdn: S2
+    parentContainerName: DC_SPINES
     configlets:
-      - WAN_AVD_RR1
-  - fqdn: RR2
-    parentContainerName: RR_ROUTERS
-    configlets:
-      - WAN_AVD_RR2
+      - DC_AVD_S2
 CVP_CONTAINERS:
-  P_ROUTERS:
-    parentContainerName: WAN
-  PE_ROUTERS:
-    parentContainerName: WAN
-  RR_ROUTERS:
-    parentContainerName: WAN
-  WAN:
+  DC:
     parentContainerName: Tenant
+  DC_L3LEAFS:
+    parentContainerName: DC
+  DC_SPINES:
+    parentContainerName: DC

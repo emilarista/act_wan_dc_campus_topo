@@ -32,6 +32,12 @@ router_bgp:
     peer_groups:
       MPLS-OVERLAY-PEERS:
         activate: true
+  address_family_vpn_ipv6:
+    neighbor_default_encapsulation_mpls_next_hop_self:
+      source_interface: Loopback0
+    peer_groups:
+      MPLS-OVERLAY-PEERS:
+        activate: true
   neighbors:
     100.70.1.1:
       peer_group: MPLS-OVERLAY-PEERS
@@ -76,6 +82,7 @@ static_routes:
   gateway: 10.30.30.1
 service_routing_protocols_model: multi-agent
 ip_routing: true
+ipv6_unicast_routing: true
 vlan_internal_order:
   allocation: ascending
   range:
@@ -129,10 +136,12 @@ loopback_interfaces:
     description: MPLS_Overlay_peering
     shutdown: false
     ip_address: 100.70.2.4/32
+    ipv6_address: 2000:2:ffff:ffff::4/128
     isis_enable: CORE
     isis_passive: true
     node_segment:
       ipv4_index: 204
+      ipv6_index: 204
 router_isis:
   instance: CORE
   log_adjacency_changes: true
@@ -147,6 +156,7 @@ router_isis:
       protected_prefixes: true
   address_family:
   - ipv4 unicast
+  - ipv6 unicast
   isis_af_defaults:
   - maximum-paths 4
   - fast-reroute ti-lfa mode link-protection
@@ -165,6 +175,7 @@ ethernet_interfaces:
     shutdown: false
     mtu: 1500
     ip_address: 100.70.100.23/31
+    ipv6_enable: true
     isis_enable: CORE
     isis_metric: 50
     isis_network_point_to_point: true
@@ -183,6 +194,7 @@ ethernet_interfaces:
     shutdown: false
     mtu: 1500
     ip_address: 100.70.100.32/31
+    ipv6_enable: true
     isis_enable: CORE
     isis_metric: 50
     isis_network_point_to_point: true
@@ -250,3 +262,5 @@ daemon_terminattr:
   cvauth:
     method: token
     token_file: /tmp/token
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata

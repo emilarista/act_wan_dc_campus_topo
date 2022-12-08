@@ -21,6 +21,7 @@ isis_default_is_type: level-2
 isis_default_circuit_type: level-2
 isis_default_metric: 50
 isis_advertise_passive_only: true
+underlay_ipv6: true
 
 # iBGP is the default and only supported overlay protocol currently
 # overlay_routing_protocol: ibgp
@@ -47,6 +48,7 @@ p:
   platform: vEOS-LAB
   defaults:
     loopback_ipv4_pool: 100.70.3.0/24
+    loopback_ipv6_pool: "2000:3:ffff:ffff::/64"
     node_sid_base: 300
     isis_system_id_prefix: '0000.0003'
   nodes:
@@ -66,6 +68,7 @@ pe:
     virtual_router_mac_address: 00:1c:73:00:dc:00
     platform: vEOS-LAB
     loopback_ipv4_pool: 100.70.2.0/24
+    loopback_ipv6_pool: "2000:2:ffff:ffff::/64"
     node_sid_base: 200
     isis_system_id_prefix: '0000.0002'
     spanning_tree_priority: 4096
@@ -77,7 +80,7 @@ pe:
       - 'graceful-restart restart-time 300'
       - 'graceful-restart'
     mpls_route_reflectors: [ RR1, RR2 ]
-    overlay_address_families: [ evpn, vpn-ipv4 ]
+    overlay_address_families: [ evpn, vpn-ipv4, vpn-ipv6 ]
   node_groups:
     PE1-2:
       filter:
@@ -114,10 +117,11 @@ rr:
   defaults:
     platform: vEOS-LAB
     loopback_ipv4_pool: 100.70.1.0/24
+    loopback_ipv6_pool: "2000:1:ffff:ffff::/64"
     is_type: level-2
     node_sid_base: 100
     isis_system_id_prefix: '0000.0001'
-    overlay_address_families: [ evpn, vpn-ipv4 ]
+    overlay_address_families: [ evpn, vpn-ipv4, vpn-ipv6 ]
     bgp_defaults:
       - 'no bgp default ipv4-unicast'
       - 'distance bgp 20 200 200'

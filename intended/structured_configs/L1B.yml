@@ -150,23 +150,20 @@ router_bgp:
         - 31123:31123
       redistribute_routes:
       - learned
+    1234:
+      tenant: TENANT_C
+      rd: 100.64.0.12:31234
+      route_targets:
+        both:
+        - 31234:31234
+      redistribute_routes:
+      - learned
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
   gateway: 10.30.30.1
 service_routing_protocols_model: multi-agent
 ip_routing: true
-daemon_terminattr:
-  cvaddrs:
-  - 10.30.30.5:9910
-  cvauth:
-    method: token
-    key: 1a38fe7df56879d685e51b6f0ff86327
-    token_file: /tmp/token
-  cvvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
-  disable_aaa: false
 vlan_internal_order:
   allocation: ascending
   range:
@@ -257,6 +254,9 @@ vlans:
   1123:
     tenant: TENANT_C
     name: C_1123
+  1234:
+    tenant: TENANT_C
+    name: C_1234
 vlan_interfaces:
   Vlan4093:
     description: MLAG_PEER_L3_PEERING
@@ -433,7 +433,9 @@ router_bfd:
 ip_igmp_snooping:
   globally_enabled: true
 ip_virtual_router_mac_address: 00:1c:73:00:dc:00
-eos_cli: agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP='true'
+eos_cli: 'agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP=''true''
+
+  '
 vxlan_interface:
   Vxlan1:
     description: L1B_VTEP
@@ -456,8 +458,19 @@ vxlan_interface:
           vni: 21102
         1123:
           vni: 31123
+        1234:
+          vni: 31234
       vrfs:
         A_VRF01:
           vni: 1
         B_VRF01:
           vni: 101
+daemon_terminattr:
+  cvaddrs:
+  - 10.30.30.5:9910
+  cvvrf: MGMT
+  cvauth:
+    method: token
+    token_file: /tmp/token
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata

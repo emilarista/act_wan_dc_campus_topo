@@ -108,6 +108,7 @@ core_interfaces:
       isis_circuit_type: level-2
       isis_authentication_mode: md5
       isis_authentication_key: $1c$sTNAlR6rKSw=
+      ipv6_enable: true
     - name: edgeleaf_uplink_profile
       # speed: forced 100gfull
       mtu: 1500
@@ -127,6 +128,8 @@ core_interfaces:
     # P1 links
     - nodes: [ PE1, P1 ]
       id: 1
+      isis_metric: 60
+      isis_hello_padding: true
       interfaces: [ Ethernet1, Ethernet1 ]
       profile: default_core_profile
 
@@ -211,6 +214,8 @@ custom_structured_configuration_daemon_terminattr:
   cvauth:
     method: "token"
     token_file: "/tmp/token"
+  ingestexclude: "/Sysdb/cell/1/agent,/Sysdb/cell/2/agent"
+  smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
 
 eos_cli: |
   agent KernelFib environment KERNELFIB_PROGRAM_ALL_ECMP='true'

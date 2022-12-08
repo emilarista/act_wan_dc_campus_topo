@@ -3,8 +3,11 @@
 dc:
 	ansible-playbook PLAY_dc_deploy.yml --skip-tags documentation
 
-wan:
+wan_build:
 	ansible-playbook PLAY_wan_deploy_eapi.yml --skip-tags documentation
+
+wan_deploy:
+	ansible-playbook PLAY_wan_deploy_eapi.yml --tags deploy
 
 checkwan:
 	ansible-playbook PLAY_wan_deploy_eapi.yml --tags deploy --check --diff

@@ -164,14 +164,14 @@ management security
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 10.30.30.5:9910 | MGMT | token,/tmp/token | - | - | False |
+| gzip | 10.30.30.5:9910 | MGMT | token,/tmp/token | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
 
 ### TerminAttr Daemon Device Configuration
 
 ```eos
 !
 daemon TerminAttr
-   exec /usr/bin/TerminAttr -cvaddr=10.30.30.5:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -taillogs
+   exec /usr/bin/TerminAttr -cvaddr=10.30.30.5:9910 -cvauth=token,/tmp/token -cvvrf=MGMT -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
    no shutdown
 ```
 
@@ -274,7 +274,7 @@ interface defaults
 
 | Interface | Channel Group | ISIS Instance | ISIS Metric | Mode | ISIS Circuit Type | Hello Padding | Authentication Mode |
 | --------- | ------------- | ------------- | ----------- | ---- | ----------------- | ------------- | ------------------- |
-| Ethernet1 | - | CORE | 50 | point-to-point | level-2 | False | md5 |
+| Ethernet1 | - | CORE | 60 | point-to-point | level-2 | True | md5 |
 | Ethernet2 | - | CORE | 50 | point-to-point | level-2 | False | md5 |
 
 ### Ethernet Interfaces Device Configuration
@@ -290,8 +290,8 @@ interface Ethernet1
    mpls ip
    isis enable CORE
    isis circuit-type level-2
-   isis metric 50
-   no isis hello padding
+   isis metric 60
+   isis hello padding
    isis network point-to-point
    isis authentication mode md5
    isis authentication key 7 $1c$sTNAlR6rKSw=
@@ -452,7 +452,7 @@ ip route vrf MGMT 0.0.0.0/0 10.30.30.1
 
 | Interface | ISIS Instance | ISIS Metric | Interface Mode |
 | --------- | ------------- | ----------- | -------------- |
-| Ethernet1 | CORE | 50 | point-to-point |
+| Ethernet1 | CORE | 60 | point-to-point |
 | Ethernet2 | CORE | 50 | point-to-point |
 | Loopback0 | CORE | - | passive |
 

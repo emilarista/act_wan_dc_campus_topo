@@ -89,17 +89,6 @@ static_routes:
   gateway: 10.30.30.1
 service_routing_protocols_model: multi-agent
 ip_routing: true
-daemon_terminattr:
-  cvaddrs:
-  - 10.30.30.5:9910
-  cvauth:
-    method: token
-    key: 1a38fe7df56879d685e51b6f0ff86327
-    token_file: /tmp/token
-  cvvrf: MGMT
-  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
-  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
-  disable_aaa: false
 vlan_internal_order:
   allocation: ascending
   range:
@@ -215,3 +204,12 @@ router_bfd:
     interval: 10000
     min_rx: 10000
     multiplier: 3
+daemon_terminattr:
+  cvaddrs:
+  - 10.30.30.5:9910
+  cvvrf: MGMT
+  cvauth:
+    method: token
+    token_file: /tmp/token
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata

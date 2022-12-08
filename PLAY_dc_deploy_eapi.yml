@@ -1,20 +1,16 @@
 ---
 - name: Build Switch configuration
-  hosts: WAN
+  hosts: DC
   connection: local
   gather_facts: false
   collections:
     - arista.avd
+    - arista.cvp
 
   tasks:
     - name: generate intended variables
       import_role:
         name: arista.avd.eos_designs
-      vars:
-        design:
-          type: "mpls"
-      diff: false
-      check_mode: false
 
     # - name: Build a act topolgy
     #   import_role:
@@ -23,8 +19,6 @@
     - name: generate device intended config and documentation
       import_role:
         name: arista.avd.eos_cli_config_gen
-      diff: false
-      check_mode: false
 
     - name: deploy configuration to device
       tags: [ deploy, never ]
